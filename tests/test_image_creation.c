@@ -1,6 +1,6 @@
 #include "cuts.h"
 
-#include "img.h"
+#include "libuimg.h"
 
 
 char * create_YUV444_image ()
