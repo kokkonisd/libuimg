@@ -13,6 +13,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
     new_image->width = width;
     new_image->height = height;
     new_image->format = format;
+    new_image->data = NULL;
 
     // Get data size based on format
     switch (format) {
