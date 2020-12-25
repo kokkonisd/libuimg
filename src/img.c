@@ -25,6 +25,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
 
         case RGB565:
             data_size = width * height * 2;
+            break;
 
         case YUV420p:
             data_size = (uint32_t) (width * height * 1.5);
