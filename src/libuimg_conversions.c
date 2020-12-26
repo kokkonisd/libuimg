@@ -683,8 +683,8 @@ Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p)
         for (j = 0; j < width; j++) {
             // Get values for the YUV pixel corresponding to the current RGB pixel
             y_value = img_yuv420p->data[i * width + j];
-            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
-            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            u_value = img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
 
             // Copy R data
             img_rgb24->data[i * 3 * width + j * 3] = yuv_to_rgb_r(y_value, u_value, v_value);
@@ -736,8 +736,8 @@ Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
         for (j = 0; j < width; j++) {
             // Get values for the YUV pixel corresponding to the current RGB pixel
             y_value = img_yuv420p->data[i * width + j];
-            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
-            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            u_value = img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
 
             // Calculate R data
             r_value = yuv_to_rgb_r(y_value, u_value, v_value);
@@ -746,11 +746,15 @@ Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
             // Calculate B data
             b_value = yuv_to_rgb_b(y_value, u_value, v_value);
 
+            // Rescale values to new range
+            r_value = rescale_color(r_value, 0, 255, 0, 32);
+            g_value = rescale_color(g_value, 0, 255, 0, 64);
+            b_value = rescale_color(b_value, 0, 255, 0, 32);
+
             // Put values together in new image
-            // All 5 bits of R + first 3 bits of G
-            img_rgb565->data[i * 2 * width + j * 2] = (r_value & 0x1f) | ((g_value & 0x07) << 5);
-            // Last 3 bits of G + all 5 bits of b
-            img_rgb565->data[i * 2 * width + j * 2 + 1] = ((g_value & 0x38) >> 3) | ((b_value & 0x1f) << 3);
+            // MSB | 5 bits of R, 6 bits of G, 5 bits of B | LSB
+            img_rgb565->data[i * 2 * width + j * 2] = (b_value & 0x1f) | ((g_value & 0x07) << 5);
+            img_rgb565->data[i * 2 * width + j * 2 + 1] = ((g_value & 0x38) >> 3) | ((r_value & 0x1f) << 3);
         }
     }
 
@@ -795,8 +799,8 @@ Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
         for (j = 0; j < width; j++) {
             // Get values for the YUV pixel corresponding to the current RGB pixel
             y_value = img_yuv420p->data[i * width + j];
-            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
-            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            u_value = img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)];
 
             // Calculate R data
             r_value = yuv_to_rgb_r(y_value, u_value, v_value);
@@ -805,9 +809,13 @@ Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
             // Calculate B data
             b_value = yuv_to_rgb_b(y_value, u_value, v_value);
 
+            r_value = rescale_color(r_value, 0, 255, 0, 8);
+            g_value = rescale_color(g_value, 0, 255, 0, 8);
+            b_value = rescale_color(b_value, 0, 255, 0, 4);
+
             // Put values together in new image
-            // 3 bits of R, 3 bits of G and 2 bits of B
-            img_rgb8->data[i * width + j] = (r_value & 0x07) | ((g_value & 0x07) << 3) | ((b_value & 0x03) << 6);
+            // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+            img_rgb8->data[i * width + j] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
         }
     }
 
@@ -1082,13 +1090,22 @@ Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24)
 
 
 
+uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
+{
+    return value * (new_max - new_min) / (old_max - old_min);
+}
 
 
 uint8_t yuv_to_rgb_r (uint8_t y, uint8_t u, uint8_t v)
 {
-    int16_t r = 0;
+    (void) u; // U is unused
+    int32_t r = 0;
 
-    r = 1 * y + 0 * u + 1.28033 * v;
+    // Perform integer calculation of R value
+    r = 298 * (y - 16) + 409 * (v - 128) + 128;
+
+    // Offset to obtain "real" value
+    r >>= 8;
 
     if (r < 0) return 0;
     if (r > 255) return 255;
@@ -1098,9 +1115,13 @@ uint8_t yuv_to_rgb_r (uint8_t y, uint8_t u, uint8_t v)
 
 uint8_t yuv_to_rgb_g (uint8_t y, uint8_t u, uint8_t v)
 {
-    int16_t g = 0;
+    int32_t g = 0;
 
-    g = 1 * y - 0.21482 * u - 0.38059 * v;
+    // Perform integer calculation of G value
+    g = 298 * (y - 16) - 100 * (u - 128) - 208 * (v - 128) + 128;
+
+    // Offset to obtain "real" value
+    g >>= 8;
 
     if (g < 0) return 0;
     if (g > 255) return 255;
@@ -1110,9 +1131,14 @@ uint8_t yuv_to_rgb_g (uint8_t y, uint8_t u, uint8_t v)
 
 uint8_t yuv_to_rgb_b (uint8_t y, uint8_t u, uint8_t v)
 {
-    int16_t b = 0;
+    (void) v; // V is unused
+    int32_t b = 0;
 
-    b = 1 * y + 2.12798 * u + 0 * v;
+    // Perform integer calculation of R value
+    b = 298 * (y - 16) + 516 * (u - 128) + 128;
+
+    // Offset to obtain "real" value
+    b >>= 8;
 
     if (b < 0) return 0;
     if (b > 255) return 255;
@@ -1122,9 +1148,13 @@ uint8_t yuv_to_rgb_b (uint8_t y, uint8_t u, uint8_t v)
 
 uint8_t rgb_to_yuv_y (uint8_t r, uint8_t g, uint8_t b)
 {
-    int16_t y = 0;
+    int32_t y = 0;
 
-    y = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+    // Perform integer calculation of Y value
+    y = 66 * r + 129 * g + 25 * b + 128;
+
+    // Offset to obtain "real" value
+    y = (y >> 8) + 16;
 
     if (y < 0) return 0;
     if (y > 255) return 255;
@@ -1134,9 +1164,13 @@ uint8_t rgb_to_yuv_y (uint8_t r, uint8_t g, uint8_t b)
 
 uint8_t rgb_to_yuv_u (uint8_t r, uint8_t g, uint8_t b)
 {
-    int16_t u = 0;
+    int32_t u = 0;
 
-    u = -0.09991 * r - 0.33609 * g + 0.436 * b;
+    // Perform integer calculation of U value
+    u = -38 * r - 74 * g + 112 * b + 128;
+
+    // Offset to obtain "real" value
+    u = (u >> 8) + 128;
 
     if (u < 0) return 0;
     if (u > 255) return 255;
@@ -1146,9 +1180,13 @@ uint8_t rgb_to_yuv_u (uint8_t r, uint8_t g, uint8_t b)
 
 uint8_t rgb_to_yuv_v (uint8_t r, uint8_t g, uint8_t b)
 {
-    int16_t v = 0;
+    int32_t v = 0;
 
-    v = 0.615 * r - 0.55861 * g - 0.05639 * b;
+    // Perform integer calculation of V value
+    v = 112 * r - 94 * g - 18 * b + 128;
+
+    // Offset to obtain "real" value
+    v = (v >> 8) + 128;
 
     if (v < 0) return 0;
     if (v > 255) return 255;

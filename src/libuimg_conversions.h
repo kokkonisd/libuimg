@@ -6,6 +6,8 @@
 #include <string.h>
 
 
+uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max);
+
 uint8_t yuv_to_rgb_r (uint8_t y, uint8_t u, uint8_t v);
 uint8_t yuv_to_rgb_g (uint8_t y, uint8_t u, uint8_t v);
 uint8_t yuv_to_rgb_b (uint8_t y, uint8_t u, uint8_t v);
