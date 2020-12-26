@@ -5,7 +5,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-// #include "conversions.h"
 
 #define VERSION 0.0.1
 
@@ -16,6 +15,7 @@ typedef enum {
     YUV420p,
     RGB24,
     RGB565,
+    RGB8,
     GRAYSCALE
 } PixelFormat;
 

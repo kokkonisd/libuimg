@@ -56,7 +56,6 @@ $(TARGET_STATIC): $(SOURCE_OBJECTS)
 	$(AR) rcs $@ $^
 
 
-$(TARGET_DYNAMIC): CFLAGS += -fPIC
 $(TARGET_DYNAMIC): $(SOURCE_OBJECTS)
 	$(CC) -shared -o $@ $^
 
@@ -65,7 +64,7 @@ $(SOURCE_DIR)/%.c: $(SOURCE_DIR)/%.h
 
 
 $(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c
-	$(CC) $(CFLAGS) $(INCLUDES) -c $< -o $@
+	$(CC) $(CFLAGS) $(INCLUDES) -fPIC -c $< -o $@
 
 
 $(BUILD_DIR)/test_%.o: $(TEST_DIR)/test_%.c

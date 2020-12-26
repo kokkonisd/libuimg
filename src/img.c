@@ -32,6 +32,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
             data_size = (uint32_t) (width * height * 1.5);
             break;
 
+        case RGB8:
         case GRAYSCALE:
             data_size = width * height;
             break;
