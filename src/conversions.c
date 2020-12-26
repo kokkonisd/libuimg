@@ -80,34 +80,6 @@ Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_GRAYSCALE (Image * img_yuv444)
-{
-    Image * img_grayscale = NULL;
-    uint32_t i = 0;
-    uint16_t width = 0;
-    uint16_t height = 0;
-
-    if (!img_yuv444) return NULL;
-
-    width = img_yuv444->width;
-    height = img_yuv444->height;
-
-    // Allocate memory for new image
-    img_grayscale = create_image(width, height, GRAYSCALE);
-    if (!img_grayscale) return NULL;
-
-    // In GRAYSCALE, each pixel has one Y value
-    // Base image: YUV YUV YUV YUV
-    // New image: Y Y Y Y
-    for (i = 0; i < width * height; i++) {
-        // Copy Y component
-        img_grayscale->data[i] = img_yuv444->data[i * 3];
-    }
-
-    return img_grayscale;
-}
-
-
 Image * convert_YUV444_to_RGB24 (Image * img_yuv444)
 {
     Image * img_rgb24 = NULL;
@@ -232,6 +204,272 @@ Image * convert_YUV444_to_RGB8 (Image * img_yuv444)
 
     return img_rgb8;
 }
+
+
+Image * convert_YUV444_to_GRAYSCALE (Image * img_yuv444)
+{
+    Image * img_grayscale = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444) return NULL;
+
+    width = img_yuv444->width;
+    height = img_yuv444->height;
+
+    // Allocate memory for new image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    if (!img_grayscale) return NULL;
+
+    // In GRAYSCALE, each pixel has one Y value
+    // Base image: YUV YUV YUV YUV
+    // New image: Y Y Y Y
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_grayscale->data[i] = img_yuv444->data[i * 3];
+    }
+
+    return img_grayscale;
+}
+
+
+Image * convert_YUV444p_to_YUV444 (Image * img_yuv444p)
+{
+    Image * img_yuv444 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_yuv444 = create_image(width, height, YUV444);
+    if (!img_yuv444) return NULL;
+
+    // In YUV444, each pixel has one Y, one U and one V value
+    // Base image: YYYY UUUU VVVV
+    // New image: YUV YUV YUV YUV
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_yuv444->data[i * 3] = img_yuv444p->data[i];
+        // Copy U component
+        img_yuv444->data[i * 3 + 1] = img_yuv444p->data[i + width * height];
+        // Copy V component
+        img_yuv444->data[i * 3 + 2] = img_yuv444p->data[i + width * height * 2];
+    }
+
+    return img_yuv444;
+}
+
+
+Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
+{
+    Image * img_yuv420p = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint32_t offset = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_yuv420p = create_image(width, height, YUV420p);
+    if (!img_yuv420p) return NULL;
+
+    // In YUV420p, four Y values share one U and one V value
+    // Base image: YYYY UUUU VVVV
+    // New image: YYYY U V
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_yuv420p->data[i] = img_yuv444p->data[i];
+    }
+
+    // Y is done, increment offset
+    offset += width * height;
+
+    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+        // Copy U component
+        img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height];
+    }
+
+    // U is done, increment offset
+    offset += (uint32_t) (width * height * 0.25);
+
+    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+        // Copy V component
+        img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height * 2];
+    }
+
+    return img_yuv420p;
+}
+
+
+Image * convert_YUV444p_to_RGB24 (Image * img_yuv444p)
+{
+    Image * img_rgb24 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_rgb24 = create_image(width, height, RGB24);
+    if (!img_rgb24) return NULL;
+
+    // In RGB24, each pixel has one R, one G and one B value
+    // Base image: YYYY UUUU VVVV
+    // New image: RGB RGB RGB RGB
+    for (i = 0; i < width * height; i++) {
+        // Copy Y -> R component
+        img_rgb24->data[i * 3] = yuv_to_rgb_r(img_yuv444p->data[i],
+                                              img_yuv444p->data[i + width * height],
+                                              img_yuv444p->data[i + width * height * 2]);
+        // Copy U -> G component
+        img_rgb24->data[i * 3 + 1] = yuv_to_rgb_g(img_yuv444p->data[i],
+                                              img_yuv444p->data[i + width * height],
+                                              img_yuv444p->data[i + width * height * 2]);
+        // Copy V -> B component
+        img_rgb24->data[i * 3 + 2] = yuv_to_rgb_b(img_yuv444p->data[i],
+                                              img_yuv444p->data[i + width * height],
+                                              img_yuv444p->data[i + width * height * 2]);
+    }
+
+    return img_rgb24;
+}
+
+
+Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p)
+{
+    Image * img_rgb565 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_rgb565 = create_image(width, height, RGB565);
+    if (!img_rgb565) return NULL;
+
+    // In RGB565, R is encoded on 5 bits, G on 6 and B on 5, so we have 16 bits per pixel
+    for (i = 0; i < width * height; i++) {
+        // Convert values
+        r = yuv_to_rgb_r(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        g = yuv_to_rgb_g(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        b = yuv_to_rgb_b(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        // Put values together in new image
+        // All 5 bits of R + first 3 bits of G
+        img_rgb565->data[i * 2] = (r & 0x1f) | ((g & 0x07) << 5);
+        // Last 3 bits of G + all 5 bits of b
+        img_rgb565->data[i * 2 + 1] = ((g & 0x38) >> 3) | ((b & 0x1f) << 3);
+    }
+
+    return img_rgb565;
+}
+
+
+Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p)
+{
+    Image * img_rgb8 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_rgb8 = create_image(width, height, RGB8);
+    if (!img_rgb8) return NULL;
+
+    // In RGB8, R is encoded on 3 bits, G on 3 and B on 2, so we have 8 bits per pixel
+    for (i = 0; i < width * height; i++) {
+        // Convert values
+        r = yuv_to_rgb_r(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        g = yuv_to_rgb_g(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        b = yuv_to_rgb_b(img_yuv444p->data[i],
+                         img_yuv444p->data[i + width * height],
+                         img_yuv444p->data[i + width * height * 2]);
+
+        // Put values together in new image
+        // 3 bits of R, 3 bits of G and 2 bits of B
+        img_rgb8->data[i] = (r & 0x07) | ((g & 0x07) << 3) | ((b & 0x03) << 6);
+    }
+
+    return img_rgb8;
+}
+
+
+Image * convert_YUV444p_to_GRAYSCALE (Image * img_yuv444p)
+{
+    Image * img_grayscale = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444p) return NULL;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // Allocate memory for new image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    if (!img_grayscale) return NULL;
+
+    // In GRAYSCALE, each pixel has one Y value
+    // Base image: YYYYY UUUU VVVV
+    // New image: Y Y Y Y
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_grayscale->data[i] = img_yuv444p->data[i];
+    }
+
+    return img_grayscale;
+}
+
+
+
+
+
+
+
 
 
 
