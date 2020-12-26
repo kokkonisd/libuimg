@@ -812,7 +812,7 @@ Image * convert_RGB24_to_YUV420p (Image * img_rgb24)
     img_yuv420p = create_image(width, height, YUV420p);
     if (!img_yuv420p) return NULL;
 
-    // In YUV420p, for Y values share one U and one V value
+    // In YUV420p, four Y values share one U and one V value
     // Base image: RGB RGB RGB RGB
     // New image: YYYY U V
     for (i = 0; i < width * height; i++) {
@@ -907,6 +907,37 @@ Image * convert_RGB24_to_RGB8 (Image * img_rgb24)
 }
 
 
+Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24)
+{
+    Image * img_grayscale = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t y = 0;
+
+    if (!img_rgb24) return NULL;
+    if (img_rgb24->format != RGB24) return NULL;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // Allocate memory for new image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    if (!img_grayscale) return NULL;
+
+    // In GRAYSCALE, each pixel has one Y value
+    // Base image: RGB RGB RGB RGB
+    // New image: YYYY
+    for (i = 0; i < width * height; i++) {
+        // Transform RGB -> Y
+        y = rgb_to_yuv_y(img_rgb24->data[i * 3], img_rgb24->data[i * 3 + 1], img_rgb24->data[i * 3 + 2]);
+
+        // Copy Y component
+        img_grayscale->data[i] = y;
+    }
+
+    return img_grayscale;
+}
 
 
 
