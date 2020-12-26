@@ -710,6 +710,48 @@ Image * convert_YUV420p_to_GRAYSCALE (Image * img_yuv420p)
 }
 
 
+Image * convert_RGB24_to_YUV444 (Image * img_rgb24)
+{
+    Image * img_yuv444 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t y = 0;
+    uint8_t u = 0;
+    uint8_t v = 0;
+
+    if (!img_rgb24) return NULL;
+    if (img_rgb24->format != RGB24) return NULL;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // Allocate memory for new image
+    img_yuv444 = create_image(width, height, YUV444);
+    if (!img_yuv444) return NULL;
+
+    // In YUV444, each pixel has one Y, one U and one V value
+    // Base image: RGB RGB RGB RGB
+    // New image: YUV YUV YUV YUV
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Transform RGB -> YUV
+        y = rgb_to_yuv_y(img_rgb24->data[i], img_rgb24->data[i + 1], img_rgb24->data[i + 2]);
+        u = rgb_to_yuv_u(img_rgb24->data[i], img_rgb24->data[i + 1], img_rgb24->data[i + 2]);
+        v = rgb_to_yuv_v(img_rgb24->data[i], img_rgb24->data[i + 1], img_rgb24->data[i + 2]);
+
+        // Copy Y component
+        img_yuv444->data[i] = y;
+        // Copy U component
+        img_yuv444->data[i + 1] = u;
+        // Copy V component
+        img_yuv444->data[i + 2] = v;
+    }
+
+    return img_yuv444;
+}
+
+
+
 
 
 
