@@ -39,7 +39,9 @@ Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
 {
     Image * img_yuv420p = NULL;
     uint32_t i = 0;
-    uint32_t offset = 0;
+    uint32_t j = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
     uint16_t width = 0;
     uint16_t height = 0;
 
@@ -57,25 +59,20 @@ Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
     // Base image: YUV YUV YUV YUV
     // New image: YYYY U V
     
-    // Copy Y component
-    for (i = 0; i < width * height; i++) {
-        img_yuv420p->data[i] = img_yuv444->data[i * 3];
-    }
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
 
-    // Y component done, increment offset
-    offset += width * height;
-
-    // Copy U component
-    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
-        img_yuv420p->data[i] = img_yuv444->data[(i - offset) * 2 * 3 + 1];
-    }
-
-    // U component done, increment offset
-    offset += UROUND_UP(width * height / 4);
-
-    // Copy U component
-    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
-        img_yuv420p->data[i] = img_yuv444->data[(i - offset) * 2 * 3 + 2];
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Copy Y data
+            img_yuv420p->data[i * width + j] = img_yuv444->data[i * 3 * width + j * 3];
+            // Copy U data
+            img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = img_yuv444->data[i * 3 * width +
+                                                                                                      j * 3 + 1];
+            // Copy V data
+            img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = img_yuv444->data[i * 3 * width +
+                                                                                                      j * 3 + 2];
+        }
     }
 
     return img_yuv420p;
@@ -286,9 +283,11 @@ Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
 {
     Image * img_yuv420p = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
     uint16_t width = 0;
     uint16_t height = 0;
-    uint32_t offset = 0;
 
     if (!img_yuv444p) return NULL;
     if (img_yuv444p->format != YUV444p) return NULL;
@@ -303,27 +302,25 @@ Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
     // In YUV420p, four Y values share one U and one V value
     // Base image: YYYY UUUU VVVV
     // New image: YYYY U V
-    for (i = 0; i < width * height; i++) {
-        // Copy Y component
-        img_yuv420p->data[i] = img_yuv444p->data[i];
+    
+    // Copy Y data
+    memcpy(img_yuv420p->data, img_yuv444p->data, width * height);
+
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
+
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Copy U data
+            img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = img_yuv444p->data[u_offset + 
+                                                                                                       i * width +
+                                                                                                       j];
+            // Copy V data
+            img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = img_yuv444p->data[u_offset * 2 +
+                                                                                                       i * width +
+                                                                                                       j];
+        }
     }
-
-    // Y is done, increment offset
-    offset += width * height;
-
-    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
-        // Copy U component
-        img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height];
-    }
-
-    // U is done, increment offset
-    offset += UROUND_UP(width * height / 4);
-
-    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
-        // Copy V component
-        img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height * 2];
-    }
-
     return img_yuv420p;
 }
 
