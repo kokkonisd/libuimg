@@ -8,6 +8,8 @@
 
 #define VERSION 0.0.1
 
+#define UROUND_UP(x) (((uint32_t) (x)) < ((float) x) ? ((uint32_t) (x)) + 1 : ((uint32_t) (x)))
+
 
 typedef enum {
     YUV444,

@@ -64,15 +64,15 @@ Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
     offset += width * height;
 
     // Copy U component
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         img_yuv420p->data[i] = img_yuv444->data[(i - offset) * 2 * 3 + 1];
     }
 
     // U component done, increment offset
-    offset += (uint32_t) (width * height * 0.25);
+    offset += UROUND_UP(width * height / 4);
 
     // Copy U component
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         img_yuv420p->data[i] = img_yuv444->data[(i - offset) * 2 * 3 + 2];
     }
 
@@ -294,15 +294,15 @@ Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
     // Y is done, increment offset
     offset += width * height;
 
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         // Copy U component
         img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height];
     }
 
     // U is done, increment offset
-    offset += (uint32_t) (width * height * 0.25);
+    offset += UROUND_UP(width * height / 4);
 
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         // Copy V component
         img_yuv420p->data[i] = img_yuv444p->data[(i - offset) * 4 + width * height * 2];
     }

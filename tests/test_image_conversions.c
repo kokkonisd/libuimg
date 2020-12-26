@@ -87,15 +87,15 @@ char * test_image_conversion_YUV444_to_YUV420p ()
     offset += width * height;
 
     // Check the U pixels of the converted image
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         CUTS_ASSERT(img_yuv420p->data[i] == 'U', "Wrong U value for converted YUV420p image on pixel %d", i - offset);
     }
 
     // Done with U pixels, increment offset
-    offset += (uint32_t) (width * height * 0.25);
+    offset += UROUND_UP(width * height / 4);
 
     // Check the V pixels of the converted image
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         CUTS_ASSERT(img_yuv420p->data[i] == 'V', "Wrong V value for converted YUV420p image on pixel %d", i - offset);
     }
 
@@ -382,15 +382,15 @@ char * test_image_conversion_YUV444p_to_YUV420p ()
     // Y is done, increment offset
     offset += width * height;
 
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         // Check U channel
         CUTS_ASSERT(img_yuv420p->data[i] == 'U', "Wrong U value for YUV420p image on pixel %d", i - offset);
     }
 
     // U is done, increment offset
-    offset += (uint32_t) (width * height * 0.25);
+    offset += UROUND_UP(width * height / 4);
 
-    for (i = offset; i < offset + (uint32_t) (width * height * 0.25); i++) {
+    for (i = offset; i < offset + UROUND_UP(width * height / 4); i++) {
         // Check V channel
         CUTS_ASSERT(img_yuv420p->data[i] == 'V', "Wrong V value for YUV420p image on pixel %d", i - offset);
     }
@@ -599,6 +599,52 @@ char * test_image_conversion_YUV444p_to_GRAYSCALE ()
 }
 
 
+// char * test_image_conversion_YUV420p_to_YUV444 ()
+// {
+//     uint32_t i = 0;
+//     uint16_t width = TEST_WIDTH;
+//     uint16_t height = TEST_HEIGHT;
+//     Image * img_yuv420p = NULL;
+//     Image * img_yuv444 = NULL;
+
+//     // Create YUV444p image
+//     img_yuv420p = create_image(width, height, YUV420p);
+
+//     // Set image pixels to the appropriate values
+//     for (i = 0; i < width * height; i++) {
+//         // Set Y values
+//         img_yuv420p->data[i] = 'Y';
+//         img_yuv420p->data[i / 4 + width * height] = 'U';
+//         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+//     }
+
+//     return NULL;
+
+//     // Convert image
+//     img_yuv444 = convert_YUV444p_to_YUV444(img_yuv420p);
+
+//     // Test that the converted image is okay
+//     CUTS_ASSERT(img_yuv444, "Converted YUV444 image couldn't be created");
+//     CUTS_ASSERT(img_yuv444->width == width, "Converted YUV444 image has wrong width");
+//     CUTS_ASSERT(img_yuv444->height == height, "Converted YUV444 image has wrong height");
+//     CUTS_ASSERT(img_yuv444->format == YUV444, "Converted YUV444 image has wrong format");
+
+//     for (i = 0; i < width * height * 3; i += 3) {
+//         // Check Y channel
+//         CUTS_ASSERT(img_yuv444->data[i] == 'Y', "Wrong Y value for YUV444 image on pixel %d", i / 3);
+//         // Check U channel
+//         CUTS_ASSERT(img_yuv444->data[i + 1] == 'U', "Wrong U value for YUV444 image on pixel %d", i / 3);
+//         // Check V channel
+//         CUTS_ASSERT(img_yuv444->data[i + 2] == 'V', "Wrong V value for YUV444 image on pixel %d", i / 3);
+//     }
+
+//     destroy_image(img_yuv420p);
+//     destroy_image(img_yuv444);
+
+//     return NULL;
+// }
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -616,6 +662,8 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_GRAYSCALE);
+
+    // CUTS_RUN_TEST(test_image_conversion_YUV420p_to_YUV444);
 
     return NULL;
 }

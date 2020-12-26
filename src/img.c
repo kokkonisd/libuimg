@@ -29,7 +29,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
             break;
 
         case YUV420p:
-            data_size = (uint32_t) (width * height * 1.5);
+            data_size = width * height + UROUND_UP(width * height / 4) * 2;
             break;
 
         case RGB8:
