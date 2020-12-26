@@ -1424,6 +1424,9 @@ char * test_image_conversion_RGB24_to_RGB565 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
+    uint8_t expected_r = 0;
+    uint8_t expected_g = 0;
+    uint8_t expected_b = 0;
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
@@ -1451,15 +1454,19 @@ char * test_image_conversion_RGB24_to_RGB565 ()
     CUTS_ASSERT(img_rgb565->height == height, "Converted RGB565 image has wrong height");
     CUTS_ASSERT(img_rgb565->format == RGB565, "Converted RGB565 image has wrong format");
 
+    expected_r = rescale_color('R', 0, 255, 0, 32);
+    expected_g = rescale_color('G', 0, 255, 0, 64);
+    expected_b = rescale_color('B', 0, 255, 0, 32);
+
     for (i = 0; i < width * height; i++) {
         // Get partial R, G, B
-        actual_r = img_rgb565->data[i * 2] & 0x1f;
+        actual_b = img_rgb565->data[i * 2] & 0x1f;
         actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
-        actual_b = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
+        actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
 
-        CUTS_ASSERT(actual_r == ('R' & 0x1f), "Wrong R value for RGB565 image on pixel %d", i);
-        CUTS_ASSERT(actual_g == ('G' & 0x3f), "Wrong G value for RGB565 image on pixel %d", i);
-        CUTS_ASSERT(actual_b == ('B' & 0x1f), "Wrong B value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(actual_r == (expected_r & 0x1f), "Wrong R value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(actual_g == (expected_g & 0x3f), "Wrong G value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(actual_b == (expected_b & 0x1f), "Wrong B value for RGB565 image on pixel %d", i);
     }
 
     destroy_image(img_rgb24);
@@ -1474,6 +1481,9 @@ char * test_image_conversion_RGB24_to_RGB8 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
+    uint8_t expected_r = 0;
+    uint8_t expected_g = 0;
+    uint8_t expected_b = 0;
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
@@ -1501,15 +1511,19 @@ char * test_image_conversion_RGB24_to_RGB8 ()
     CUTS_ASSERT(img_rgb8->height == height, "Converted RGB8 image has wrong height");
     CUTS_ASSERT(img_rgb8->format == RGB8, "Converted RGB8 image has wrong format");
 
+    expected_r = rescale_color('R', 0, 255, 0, 8);
+    expected_g = rescale_color('G', 0, 255, 0, 8);
+    expected_b = rescale_color('B', 0, 255, 0, 4);
+
     for (i = 0; i < width * height; i++) {
         // Get partial R, G, B
-        actual_r = img_rgb8->data[i] & 0x07;
-        actual_g = (img_rgb8->data[i] >> 3) & 0x7;
-        actual_b = (img_rgb8->data[i] >> 6) & 0x3;
+        actual_b = img_rgb8->data[i] & 0x03;
+        actual_g = (img_rgb8->data[i] >> 2) & 0x7;
+        actual_r = (img_rgb8->data[i] >> 5) & 0x7;
 
-        CUTS_ASSERT(actual_r == ('R' & 0x07), "Wrong R value for RGB8 image on pixel %d", i);
-        CUTS_ASSERT(actual_g == ('G' & 0x07), "Wrong G value for RGB8 image on pixel %d", i);
-        CUTS_ASSERT(actual_b == ('B' & 0x03), "Wrong B value for RGB8 image on pixel %d", i);
+        CUTS_ASSERT(actual_r == (expected_r & 0x07), "Wrong R value for RGB8 image on pixel %d", i);
+        CUTS_ASSERT(actual_g == (expected_g & 0x07), "Wrong G value for RGB8 image on pixel %d", i);
+        CUTS_ASSERT(actual_b == (expected_b & 0x03), "Wrong B value for RGB8 image on pixel %d", i);
     }
 
     destroy_image(img_rgb24);
