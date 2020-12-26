@@ -1404,12 +1404,14 @@ char * test_image_conversion_RGB24_to_YUV420p ()
     for (i = 0; i < width * height; i++) {
         // Check Y channel
         CUTS_ASSERT(img_yuv420p->data[i] == y, "Wrong Y value for YUV420p image on pixel %d", i);
+    }
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
         // Check U channel
-        CUTS_ASSERT(img_yuv420p->data[i / 4 + width * height] == u, "Wrong U value for YUV420p image on pixel %d",
-                    i / 4);
+        CUTS_ASSERT(img_yuv420p->data[i] == u, "Wrong U value for YUV420p image on pixel %d", i - width * height);
         // Check V channel
-        CUTS_ASSERT(img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] == v,
-                    "Wrong V value for YUV420p image on pixel %d", i / 4);
+        CUTS_ASSERT(img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] == v,
+                    "Wrong V value for YUV420p image on pixel %d", i - width * height);
     }
 
     destroy_image(img_rgb24);
