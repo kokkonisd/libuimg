@@ -1291,6 +1291,61 @@ char * test_image_conversion_RGB24_to_YUV444 ()
 }
 
 
+char * test_image_conversion_RGB24_to_YUV444p ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t y = 0;
+    uint8_t u = 0;
+    uint8_t v = 0;
+    Image * img_rgb24 = NULL;
+    Image * img_yuv444p = NULL;
+
+    // Create RGB24 image
+    img_rgb24 = create_image(width, height, RGB24);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Set R values
+        img_rgb24->data[i] = 'R';
+        // Set G values
+        img_rgb24->data[i + 1] = 'G';
+        // Set B values
+        img_rgb24->data[i + 2] = 'B';
+    }
+
+    // Convert image
+    img_yuv444p = convert_RGB24_to_YUV444p(img_rgb24);
+
+    // Calculate expected values
+    y = rgb_to_yuv_y('R', 'G', 'B');
+    u = rgb_to_yuv_u('R', 'G', 'B');
+    v = rgb_to_yuv_v('R', 'G', 'B');
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_yuv444p, "Converted YUV444p image couldn't be created");
+    CUTS_ASSERT(img_yuv444p->width == width, "Converted YUV444p image has wrong width");
+    CUTS_ASSERT(img_yuv444p->height == height, "Converted YUV444p image has wrong height");
+    CUTS_ASSERT(img_yuv444p->format == YUV444p, "Converted YUV444p image has wrong format");
+
+    for (i = 0; i < width * height; i++) {
+        // Check Y channel
+        CUTS_ASSERT(img_yuv444p->data[i] == y, "Wrong Y value for YUV444p image on pixel %d", i);
+        // Check U channel
+        CUTS_ASSERT(img_yuv444p->data[i + width * height] == u, "Wrong U value for YUV444p image on pixel %d", i);
+        // Check V channel
+        CUTS_ASSERT(img_yuv444p->data[i + width * height * 2] == v, "Wrong V value for YUV444p image on pixel %d",
+                    i);
+    }
+
+    destroy_image(img_rgb24);
+    destroy_image(img_yuv444p);
+
+    return NULL;
+}
+
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -1319,6 +1374,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_GRAYSCALE);
 
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444);
+    CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444p);
 
     return NULL;
 }
