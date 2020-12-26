@@ -792,6 +792,85 @@ Image * convert_RGB24_to_YUV444p (Image * img_rgb24)
 }
 
 
+Image * convert_RGB24_to_YUV420p (Image * img_rgb24)
+{
+    Image * img_yuv420p = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t y = 0;
+    uint8_t u = 0;
+    uint8_t v = 0;
+
+    if (!img_rgb24) return NULL;
+    if (img_rgb24->format != RGB24) return NULL;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // Allocate memory for new image
+    img_yuv420p = create_image(width, height, YUV420p);
+    if (!img_yuv420p) return NULL;
+
+    // In YUV420p, for Y values share one U and one V value
+    // Base image: RGB RGB RGB RGB
+    // New image: YYYY U V
+    for (i = 0; i < width * height; i++) {
+        // Transform RGB -> YUV
+        y = rgb_to_yuv_y(img_rgb24->data[i * 3], img_rgb24->data[i * 3 + 1], img_rgb24->data[i * 3 + 2]);
+        u = rgb_to_yuv_u(img_rgb24->data[i * 3], img_rgb24->data[i * 3 + 1], img_rgb24->data[i * 3 + 2]);
+        v = rgb_to_yuv_v(img_rgb24->data[i * 3], img_rgb24->data[i * 3 + 1], img_rgb24->data[i * 3 + 2]);
+
+        // Copy Y component
+        img_yuv420p->data[i] = y;
+        // Copy U component
+        img_yuv420p->data[i / 4 + width * height] = u;
+        // Copy V component
+        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = v;
+    }
+
+    return img_yuv420p;
+}
+
+
+Image * convert_RGB24_to_RGB565 (Image * img_rgb24)
+{
+    Image * img_rgb565 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
+    if (!img_rgb24) return NULL;
+    if (img_rgb24->format != RGB24) return NULL;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // Allocate memory for new image
+    img_rgb565 = create_image(width, height, RGB565);
+    if (!img_rgb565) return NULL;
+
+    // In RGB565, R is encoded on 5 bits, G on 6 and B on 5, so we have 16 bits per pixel
+    for (i = 0; i < width * height; i++) {
+        // Transform RGB -> YUV
+        r = img_rgb24->data[i * 3];
+        g = img_rgb24->data[i * 3 + 1];
+        b = img_rgb24->data[i * 3 + 2];
+
+        // Put values together in new image
+        // All 5 bits of R + first 3 bits of G
+        img_rgb565->data[i * 2] = (r & 0x1f) | ((g & 0x07) << 5);
+        // Last 3 bits of G + all 5 bits of b
+        img_rgb565->data[i * 2 + 1] = ((g & 0x38) >> 3) | ((b & 0x1f) << 3);
+    }
+
+    return img_rgb565;
+}
+
+
 
 
 

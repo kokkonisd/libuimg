@@ -1345,6 +1345,111 @@ char * test_image_conversion_RGB24_to_YUV444p ()
 }
 
 
+char * test_image_conversion_RGB24_to_YUV420p ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t y = 0;
+    uint8_t u = 0;
+    uint8_t v = 0;
+    Image * img_rgb24 = NULL;
+    Image * img_yuv420p = NULL;
+
+    // Create RGB24 image
+    img_rgb24 = create_image(width, height, RGB24);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Set R values
+        img_rgb24->data[i] = 'R';
+        // Set G values
+        img_rgb24->data[i + 1] = 'G';
+        // Set B values
+        img_rgb24->data[i + 2] = 'B';
+    }
+
+    // Convert image
+    img_yuv420p = convert_RGB24_to_YUV420p(img_rgb24);
+
+    // Calculate expected values
+    y = rgb_to_yuv_y('R', 'G', 'B');
+    u = rgb_to_yuv_u('R', 'G', 'B');
+    v = rgb_to_yuv_v('R', 'G', 'B');
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_yuv420p, "Converted YUV420p image couldn't be created");
+    CUTS_ASSERT(img_yuv420p->width == width, "Converted YUV420p image has wrong width");
+    CUTS_ASSERT(img_yuv420p->height == height, "Converted YUV420p image has wrong height");
+    CUTS_ASSERT(img_yuv420p->format == YUV420p, "Converted YUV420p image has wrong format");
+
+    for (i = 0; i < width * height; i++) {
+        // Check Y channel
+        CUTS_ASSERT(img_yuv420p->data[i] == y, "Wrong Y value for YUV420p image on pixel %d", i);
+        // Check U channel
+        CUTS_ASSERT(img_yuv420p->data[i / 4 + width * height] == u, "Wrong U value for YUV420p image on pixel %d",
+                    i / 4);
+        // Check V channel
+        CUTS_ASSERT(img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] == v,
+                    "Wrong V value for YUV420p image on pixel %d", i / 4);
+    }
+
+    destroy_image(img_rgb24);
+    destroy_image(img_yuv420p);
+
+    return NULL;
+}
+
+
+char * test_image_conversion_RGB24_to_RGB565 ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t partial_r = 0;
+    uint8_t partial_g = 0;
+    uint8_t partial_b = 0;
+    Image * img_rgb24 = NULL;
+    Image * img_rgb565 = NULL;
+
+    // Create RGB24 image
+    img_rgb24 = create_image(width, height, RGB24);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Set R values
+        img_rgb24->data[i] = 'R';
+        // Set G values
+        img_rgb24->data[i + 1] = 'G';
+        // Set B values
+        img_rgb24->data[i + 2] = 'B';
+    }
+
+    // Convert image
+    img_rgb565 = convert_RGB24_to_RGB565(img_rgb24);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_rgb565, "Converted RGB565 image couldn't be created");
+    CUTS_ASSERT(img_rgb565->width == width, "Converted RGB565 image has wrong width");
+    CUTS_ASSERT(img_rgb565->height == height, "Converted RGB565 image has wrong height");
+    CUTS_ASSERT(img_rgb565->format == RGB565, "Converted RGB565 image has wrong format");
+
+    for (i = 0; i < width * height; i++) {
+        // Get partial R, G, B
+        partial_r = img_rgb565->data[i * 2] & 0x1f;
+        partial_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
+        partial_b = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
+
+        CUTS_ASSERT(partial_r == ('R' & 0x1f), "Wrong R value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(partial_g == ('G' & 0x3f), "Wrong G value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(partial_b == ('B' & 0x1f), "Wrong B value for RGB565 image on pixel %d", i);
+    }
+
+    destroy_image(img_rgb24);
+    destroy_image(img_rgb565);
+
+    return NULL;
+}
+
+
 
 char * all_tests ()
 {
@@ -1375,6 +1480,8 @@ char * all_tests ()
 
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444p);
+    CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV420p);
+    CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB565);
 
     return NULL;
 }

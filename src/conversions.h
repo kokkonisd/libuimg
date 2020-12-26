@@ -36,8 +36,8 @@ Image * convert_YUV420p_to_GRAYSCALE (Image * img_yuv420p);
 
 Image * convert_RGB24_to_YUV444 (Image * img_rgb24);
 Image * convert_RGB24_to_YUV444p (Image * img_rgb24);
-Image * convert_RGB24_to_YUV420p (Image * img_rgb24); // TODO
-Image * convert_RGB24_to_RGB565 (Image * img_rgb24); // TODO
+Image * convert_RGB24_to_YUV420p (Image * img_rgb24);
+Image * convert_RGB24_to_RGB565 (Image * img_rgb24);
 Image * convert_RGB24_to_RGB8 (Image * img_rgb24); // TODO
 Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24); // TODO
 
