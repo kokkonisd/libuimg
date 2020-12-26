@@ -1,5 +1,6 @@
 DEBUG ?= 1
 ERROREXIT ?= 1
+PREFIX ?= /usr/local
 
 TARGET = $(BUILD_DIR)/libuimg
 TARGET_STATIC = $(patsubst %, %.a, $(TARGET))
@@ -14,6 +15,7 @@ TEST_DIR = tests
 INCLUDES = -Isrc -I$(TEST_DIR)/cuts/src
 
 
+HEADERS = $(wildcard $(SOURCE_DIR)/*.h)
 SOURCES = $(wildcard $(SOURCE_DIR)/*.c)
 TEST_SOURCES = $(wildcard $(TEST_DIR)/test_*.c)
 TEST_OBJECTS = $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TEST_SOURCES))
@@ -25,6 +27,15 @@ ifeq ($(DEBUG), 1)
 	CFLAGS += -g -O0
 else
 	CFLAGS += -O3
+endif
+
+
+ifeq ($(shell uname -s), Linux)
+	DYNAMIC_LIB_FLAG = -shared
+	TARGET_DYNAMIC = $(patsubst %, %.so, $(TARGET))
+else
+	DYNAMIC_LIB_FLAG = -dynamiclib
+	TARGET_DYNAMIC = $(patsubst %, %.dylib, $(TARGET))
 endif
 
 
@@ -52,12 +63,18 @@ else
 endif
 
 
+install: $(TARGET_STATIC) $(TARGET_DYNAMIC)
+	install $(TARGET_STATIC) $(PREFIX)/lib/
+	install $(TARGET_DYNAMIC) $(PREFIX)/lib/
+	install $(HEADERS) $(PREFIX)/include/
+
+
 $(TARGET_STATIC): $(SOURCE_OBJECTS)
 	$(AR) rcs $@ $^
 
 
 $(TARGET_DYNAMIC): $(SOURCE_OBJECTS)
-	$(CC) -shared -o $@ $^
+	$(CC) $(DYNAMIC_LIB_FLAG) -o $@ $^
 
 
 $(SOURCE_DIR)/%.c: $(SOURCE_DIR)/%.h
@@ -72,7 +89,7 @@ $(BUILD_DIR)/test_%.o: $(TEST_DIR)/test_%.c
 
 
 $(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(TARGET_DYNAMIC)
-	$(CC) $(CFLAGS) $(INCLUDES) -L$(BUILD_DIR) -Wl,-rpath,build/ $< -o $@ -luimg
+	$(CC) $(CFLAGS) $(INCLUDES) -L$(BUILD_DIR) -Wl,-rpath,$(BUILD_DIR) $< -o $@ -luimg
 
 
 build:

@@ -2,8 +2,8 @@
 
 #include "libuimg.h"
 
-#define TEST_WIDTH 256
-#define TEST_HEIGHT 123
+#define TEST_WIDTH 257
+#define TEST_HEIGHT 125
 
 
 // char * test_incorrect_conversions ()
@@ -960,11 +960,14 @@ char * test_image_conversion_YUV420p_to_YUV444 ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image
@@ -1004,15 +1007,19 @@ char * test_image_conversion_YUV420p_to_YUV444p ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image
     img_yuv444p = convert_YUV420p_to_YUV444p(img_yuv420p);
+
 
     // Check that the converted image is okay
     CUTS_ASSERT(img_yuv444p, "Converted YUV444p image couldn't be created");
@@ -1026,8 +1033,8 @@ char * test_image_conversion_YUV420p_to_YUV444p ()
         // Check U channel
         CUTS_ASSERT(img_yuv444p->data[i + width * height] == 'U', "Wrong U value for YUV444p image on pixel %d", i);
         // Check V channel
-        CUTS_ASSERT(img_yuv444p->data[i + width * height * 2] == 'V', "Wrong V value for YUV444p image on pixel %d",
-                    i);
+        CUTS_ASSERT(img_yuv444p->data[i + width * height * 2] == 'V', "Wrong V value for YUV444p image on pixel %d: %c",
+                    i, img_yuv444p->data[i + width * height * 2]);
     }
 
     destroy_image(img_yuv420p);
@@ -1049,11 +1056,14 @@ char * test_image_conversion_YUV420p_to_RGB24 ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image
@@ -1102,11 +1112,14 @@ char * test_image_conversion_YUV420p_to_RGB565 ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image
@@ -1159,11 +1172,14 @@ char * test_image_conversion_YUV420p_to_RGB8 ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image
@@ -1210,11 +1226,14 @@ char * test_image_conversion_YUV420p_to_GRAYSCALE ()
     img_yuv420p = create_image(width, height, YUV420p);
 
     // Set image pixels to the appropriate values
-    for (i = 0; i < width * height; i++) {
+    // Set Y values
+    memset(img_yuv420p->data, 'Y', width * height);
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Set U values
+        img_yuv420p->data[i] = 'U';
         // Set Y values
-        img_yuv420p->data[i] = 'Y';
-        img_yuv420p->data[i / 4 + width * height] = 'U';
-        img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)] = 'V';
+        img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] = 'V';
     }
 
     // Convert image

@@ -1,4 +1,4 @@
-#include "img.h"
+#include "libuimg_img.h"
 
 
 Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
@@ -29,7 +29,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
             break;
 
         case YUV420p:
-            data_size = width * height + UROUND_UP(width * height / 4) * 2;
+            data_size = width * height + 2 * (UROUND_UP(width / 2) * UROUND_UP(height / 2));
             break;
 
         case RGB8:

@@ -1,7 +1,9 @@
 #ifndef __LIB_UIMG_CONVERSIONS_H__
 #define __LIB_UIMG_CONVERSIONS_H__
 
-#include "img.h"
+#include "libuimg_img.h"
+
+#include <string.h>
 
 
 uint8_t yuv_to_rgb_r (uint8_t y, uint8_t u, uint8_t v);

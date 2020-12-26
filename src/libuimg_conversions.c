@@ -1,5 +1,5 @@
-#include "img.h"
-#include "conversions.h"
+#include "libuimg_img.h"
+#include "libuimg_conversions.h"
 
 
 Image * convert_YUV444_to_YUV444p (Image * img_yuv444)
@@ -481,8 +481,11 @@ Image * convert_YUV420p_to_YUV444 (Image * img_yuv420p)
 {
     Image * img_yuv444 = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
     uint16_t width = 0;
     uint16_t height = 0;
+    uint32_t base_row_offset = 0;
+    uint32_t conv_row_offset = 0;
 
     if (!img_yuv420p) return NULL;
     if (img_yuv420p->format != YUV420p) return NULL;
@@ -495,16 +498,59 @@ Image * convert_YUV420p_to_YUV444 (Image * img_yuv420p)
     if (!img_yuv444) return NULL;
 
     // In YUV444, each pixel has one Y, one U and one V value
-    // This necessitates upscaling, so U and V values will be quadrupled
+    // This necessitates upscaling, so U and V values will be quadrupled by doubling them horizontally and vertically
     // Base image: YYYY U V
     // New image: YUV YUV YUV YUV
+    // 
+    // More explicitly, for a 3x3 image (to show how to handle odd dimensions):
+    // 
+    // Base 3x3 YUV420p image:
+    //
+    //     Y0 Y1 Y2
+    //     Y3 Y4 Y5
+    //     Y6 Y7 Y8
+    //     --------
+    //     U0    U1
+    //     
+    //     U2    U3
+    //     --------
+    //     V0    V1
+    //     
+    //     V2    V3
+    //
+    //
+    // Converted 3x3 YUV444 image:
+    //
+    //     Y0U0V0 Y1U0V0 Y2U1V1
+    //     Y3U0V0 Y4U0V0 Y5U1V1
+    //     Y6U2V2 Y7U2V2 Y8U3V3
+    //
+    //
+    // In conclusion, because the dimensions are odd, U1 is shared among 2 pixels only (Y2 and Y5), U2 is shared among
+    // 2 pixels only (Y6 and Y7) and U3 is used by one pixel only (Y8).
+    
     for (i = 0; i < width * height; i++) {
         // Copy Y component
         img_yuv444->data[i * 3] = img_yuv420p->data[i];
-        // Copy U component
-        img_yuv444->data[i * 3 + 1] = img_yuv420p->data[i / 4 + width * height];
-        // Copy V component
-        img_yuv444->data[i * 3 + 2] = img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)];
+    }
+
+    for (i = 0; i < height; i++) {
+        // On the base image, we need to skip the Y values (W x H bytes)
+        base_row_offset = width * height + (i / 2) * UROUND_UP(width / 2);
+        // On the converted image, we only want 
+        conv_row_offset = i * 3 * width;
+
+        for (j = 0; j < width; j++) {
+            // U values are duplicated horizontally & vertically
+            img_yuv444->data[conv_row_offset + j * 3 + 1] = img_yuv420p->data[base_row_offset + (j / 2)];
+
+            // Increment base offset to handle V values of the current iteration
+            base_row_offset += UROUND_UP(width / 2) * UROUND_UP(height / 2);
+            // V values are duplicated horizontally & vertically
+            img_yuv444->data[i * 3 * width + j * 3 + 2] = img_yuv420p->data[base_row_offset + (j / 2)];
+            // Reset base row offset for the U values of the next iteration
+            base_row_offset -= UROUND_UP(width / 2) * UROUND_UP(height / 2);
+        }
     }
 
     return img_yuv444;
@@ -515,8 +561,11 @@ Image * convert_YUV420p_to_YUV444p (Image * img_yuv420p)
 {
     Image * img_yuv444p = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
     uint16_t width = 0;
     uint16_t height = 0;
+    uint32_t base_offset = 0;
+    uint32_t converted_offset = 0;
 
     if (!img_yuv420p) return NULL;
     if (img_yuv420p->format != YUV420p) return NULL;
@@ -532,14 +581,66 @@ Image * convert_YUV420p_to_YUV444p (Image * img_yuv420p)
     // This necessitates upscaling, so U and V values will be quadrupled
     // Base image: YYYY U V
     // New image: YYYY UUUU VVVV
-    for (i = 0; i < width * height; i++) {
-        // Copy Y component
-        img_yuv444p->data[i] = img_yuv420p->data[i];
-        // Copy U component
-        img_yuv444p->data[i + width * height] = img_yuv420p->data[i / 4 + width * height];
-        // Copy V component
-        img_yuv444p->data[i + width * height * 2] = img_yuv420p->data[i / 4 + width * height +
-                                                                      UROUND_UP(width * height / 4)];
+    // More explicitly, for a 3x3 image (to show how to handle odd dimensions):
+    // 
+    // Base 3x3 YUV420p image:
+    //
+    //     Y0 Y1 Y2
+    //     Y3 Y4 Y5
+    //     Y6 Y7 Y8
+    //     --------
+    //     U0    U1
+    //     
+    //     U2    U3
+    //     --------
+    //     V0    V1
+    //     
+    //     V2    V3
+    //
+    //
+    // Converted 3x3 YUV444p image:
+    //
+    //     Y0 Y1 Y2
+    //     Y3 Y4 Y5
+    //     Y6 Y7 Y8
+    //     --------
+    //     U0 U0 U1
+    //     U0 U0 U1
+    //     U2 U2 U3
+    //     --------
+    //     V0 V0 V1
+    //     V0 V0 V1
+    //     V2 V2 V3
+    //
+    //
+    // In conclusion, because the dimensions are odd, U1 is shared among 2 pixels only (Y2 and Y5), U2 is shared among
+    // 2 pixels only (Y6 and Y7) and U3 is used by one pixel only (Y8).
+    
+    // Copy Y component
+    memcpy(img_yuv444p->data, img_yuv420p->data, width * height);
+
+    base_offset = width * height;
+    converted_offset = width * height;
+
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // U values are duplicated horizontally & vertically
+            img_yuv444p->data[converted_offset + i * width + j] = img_yuv420p->data[base_offset +
+                                                                                    (i / 2) * UROUND_UP(width / 2) +
+                                                                                    (j / 2)];
+        }
+    }
+
+    base_offset += UROUND_UP(width / 2) * UROUND_UP(height / 2);
+    converted_offset += width * height;
+
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // V values are duplicated horizontally & vertically
+            img_yuv444p->data[converted_offset + i * width + j] = img_yuv420p->data[base_offset +
+                                                                                    (i / 2) * UROUND_UP(width / 2) +
+                                                                                    (j / 2)];
+        }
     }
 
     return img_yuv444p;
@@ -550,8 +651,14 @@ Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p)
 {
     Image * img_rgb24 = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
     uint16_t width = 0;
     uint16_t height = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
 
     if (!img_yuv420p) return NULL;
     if (img_yuv420p->format != YUV420p) return NULL;
@@ -567,22 +674,25 @@ Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p)
     // This necessitates upscaling, so U and V values will be quadrupled
     // Base image: YYYY U V
     // New image: RGB RGB RGB RGB
-    for (i = 0; i < width * height; i++) {
-        // Copy Y -> R component
-        img_rgb24->data[i * 3] = yuv_to_rgb_r(img_yuv420p->data[i],
-                                              img_yuv420p->data[i / 4 + width * height],
-                                              img_yuv420p->data[i / 4 + width * height +
-                                                                UROUND_UP(width * height / 4)]);
-        // Copy U -> G component
-        img_rgb24->data[i * 3 + 1] = yuv_to_rgb_g(img_yuv420p->data[i],
-                                              img_yuv420p->data[i / 4 + width * height],
-                                              img_yuv420p->data[i / 4 + width * height +
-                                                                UROUND_UP(width * height / 4)]);
-        // Copy V -> B component
-        img_rgb24->data[i * 3 + 2] = yuv_to_rgb_b(img_yuv420p->data[i],
-                                              img_yuv420p->data[i / 4 + width * height],
-                                              img_yuv420p->data[i / 4 + width * height +
-                                                                UROUND_UP(width * height / 4)]);
+    // See `convert_YUV420p_to_YUV444()` or `convert_YUV420p_to_YUV444p()` for more info
+
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
+
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Get values for the YUV pixel corresponding to the current RGB pixel
+            y_value = img_yuv420p->data[i * width + j];
+            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+
+            // Copy R data
+            img_rgb24->data[i * 3 * width + j * 3] = yuv_to_rgb_r(y_value, u_value, v_value);
+            // Copy G data
+            img_rgb24->data[i * 3 * width + j * 3 + 1] = yuv_to_rgb_g(y_value, u_value, v_value);
+            // Copy B data
+            img_rgb24->data[i * 3 * width + j * 3 + 2] = yuv_to_rgb_b(y_value, u_value, v_value);
+        }
     }
 
     return img_rgb24;
@@ -593,11 +703,17 @@ Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
 {
     Image * img_rgb565 = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
     uint16_t width = 0;
     uint16_t height = 0;
-    uint8_t r = 0;
-    uint8_t g = 0;
-    uint8_t b = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
 
     if (!img_yuv420p) return NULL;
     if (img_yuv420p->format != YUV420p) return NULL;
@@ -611,25 +727,31 @@ Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
 
     // In RGB565, R is encoded on 5 bits, G on 6 and B on 5, so we have 16 bits per pixel
     // This necessitates upscaling, so U and V values will be quadrupled
-    for (i = 0; i < width * height; i++) {
-        // Convert values
-        r = yuv_to_rgb_r(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    // See `convert_YUV420p_to_YUV444()` or `convert_YUV420p_to_YUV444p()` for more info
 
-        g = yuv_to_rgb_g(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
 
-        b = yuv_to_rgb_b(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Get values for the YUV pixel corresponding to the current RGB pixel
+            y_value = img_yuv420p->data[i * width + j];
+            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
 
-        // Put values together in new image
-        // All 5 bits of R + first 3 bits of G
-        img_rgb565->data[i * 2] = (r & 0x1f) | ((g & 0x07) << 5);
-        // Last 3 bits of G + all 5 bits of b
-        img_rgb565->data[i * 2 + 1] = ((g & 0x38) >> 3) | ((b & 0x1f) << 3);
+            // Calculate R data
+            r_value = yuv_to_rgb_r(y_value, u_value, v_value);
+            // Calculate G data
+            g_value = yuv_to_rgb_g(y_value, u_value, v_value);
+            // Calculate B data
+            b_value = yuv_to_rgb_b(y_value, u_value, v_value);
+
+            // Put values together in new image
+            // All 5 bits of R + first 3 bits of G
+            img_rgb565->data[i * 2 * width + j * 2] = (r_value & 0x1f) | ((g_value & 0x07) << 5);
+            // Last 3 bits of G + all 5 bits of b
+            img_rgb565->data[i * 2 * width + j * 2 + 1] = ((g_value & 0x38) >> 3) | ((b_value & 0x1f) << 3);
+        }
     }
 
     return img_rgb565;
@@ -640,11 +762,17 @@ Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
 {
     Image * img_rgb8 = NULL;
     uint32_t i = 0;
+    uint32_t j = 0;
     uint16_t width = 0;
     uint16_t height = 0;
-    uint8_t r = 0;
-    uint8_t g = 0;
-    uint8_t b = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
 
     if (!img_yuv420p) return NULL;
     if (img_yuv420p->format != YUV420p) return NULL;
@@ -658,23 +786,29 @@ Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
 
     // In RGB8, R is encoded on 3 bits, G on 3 and B on 2, so we have 8 bits per pixel
     // This necessitates upscaling, so U and V values will be quadrupled
-    for (i = 0; i < width * height; i++) {
-        // Convert values
-        r = yuv_to_rgb_r(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    // See `convert_YUV420p_to_YUV444()` or `convert_YUV420p_to_YUV444p()` for more info
 
-        g = yuv_to_rgb_g(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
 
-        b = yuv_to_rgb_b(img_yuv420p->data[i],
-                         img_yuv420p->data[i / 4 + width * height],
-                         img_yuv420p->data[i / 4 + width * height + UROUND_UP(width * height / 4)]);
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Get values for the YUV pixel corresponding to the current RGB pixel
+            y_value = img_yuv420p->data[i * width + j];
+            u_value = img_yuv420p->data[u_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
+            v_value = img_yuv420p->data[v_offset + (i / 2) + UROUND_UP(width / 2) + (j / 2)];
 
-        // Put values together in new image
-        // 3 bits of R, 3 bits of G and 2 bits of B
-        img_rgb8->data[i] = (r & 0x07) | ((g & 0x07) << 3) | ((b & 0x03) << 6);
+            // Calculate R data
+            r_value = yuv_to_rgb_r(y_value, u_value, v_value);
+            // Calculate G data
+            g_value = yuv_to_rgb_g(y_value, u_value, v_value);
+            // Calculate B data
+            b_value = yuv_to_rgb_b(y_value, u_value, v_value);
+
+            // Put values together in new image
+            // 3 bits of R, 3 bits of G and 2 bits of B
+            img_rgb8->data[i * width + j] = (r_value & 0x07) | ((g_value & 0x07) << 3) | ((b_value & 0x03) << 6);
+        }
     }
 
     return img_rgb8;
