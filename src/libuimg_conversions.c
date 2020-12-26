@@ -373,9 +373,9 @@ Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p)
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
-    uint8_t r = 0;
-    uint8_t g = 0;
-    uint8_t b = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
 
     if (!img_yuv444p) return NULL;
     if (img_yuv444p->format != YUV444p) return NULL;
@@ -390,23 +390,27 @@ Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p)
     // In RGB565, R is encoded on 5 bits, G on 6 and B on 5, so we have 16 bits per pixel
     for (i = 0; i < width * height; i++) {
         // Convert values
-        r = yuv_to_rgb_r(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        r_value = yuv_to_rgb_r(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
 
-        g = yuv_to_rgb_g(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        g_value = yuv_to_rgb_g(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
 
-        b = yuv_to_rgb_b(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        b_value = yuv_to_rgb_b(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 255, 0, 32);
+        g_value = rescale_color(g_value, 0, 255, 0, 64);
+        b_value = rescale_color(b_value, 0, 255, 0, 32);
 
         // Put values together in new image
-        // All 5 bits of R + first 3 bits of G
-        img_rgb565->data[i * 2] = (r & 0x1f) | ((g & 0x07) << 5);
-        // Last 3 bits of G + all 5 bits of b
-        img_rgb565->data[i * 2 + 1] = ((g & 0x38) >> 3) | ((b & 0x1f) << 3);
+        // MSB | 5 bits of R, 6 bits of G, 5 bits of B | LSB
+        img_rgb565->data[i * 2] = (b_value & 0x1f) | ((g_value & 0x07) << 5);
+        img_rgb565->data[i * 2 + 1] = ((g_value & 0x38) >> 3) | ((r_value & 0x1f) << 3);
     }
 
     return img_rgb565;
@@ -419,9 +423,9 @@ Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p)
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
-    uint8_t r = 0;
-    uint8_t g = 0;
-    uint8_t b = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
 
     if (!img_yuv444p) return NULL;
     if (img_yuv444p->format != YUV444p) return NULL;
@@ -436,21 +440,26 @@ Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p)
     // In RGB8, R is encoded on 3 bits, G on 3 and B on 2, so we have 8 bits per pixel
     for (i = 0; i < width * height; i++) {
         // Convert values
-        r = yuv_to_rgb_r(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        r_value = yuv_to_rgb_r(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
 
-        g = yuv_to_rgb_g(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        g_value = yuv_to_rgb_g(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
 
-        b = yuv_to_rgb_b(img_yuv444p->data[i],
-                         img_yuv444p->data[i + width * height],
-                         img_yuv444p->data[i + width * height * 2]);
+        b_value = yuv_to_rgb_b(img_yuv444p->data[i],
+                               img_yuv444p->data[i + width * height],
+                               img_yuv444p->data[i + width * height * 2]);
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 255, 0, 8);
+        g_value = rescale_color(g_value, 0, 255, 0, 8);
+        b_value = rescale_color(b_value, 0, 255, 0, 4);
 
         // Put values together in new image
         // 3 bits of R, 3 bits of G and 2 bits of B
-        img_rgb8->data[i] = (r & 0x07) | ((g & 0x07) << 3) | ((b & 0x03) << 6);
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
     }
 
     return img_rgb8;
