@@ -1450,6 +1450,56 @@ char * test_image_conversion_RGB24_to_RGB565 ()
 }
 
 
+char * test_image_conversion_RGB24_to_RGB8 ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t partial_r = 0;
+    uint8_t partial_g = 0;
+    uint8_t partial_b = 0;
+    Image * img_rgb24 = NULL;
+    Image * img_rgb8 = NULL;
+
+    // Create RGB24 image
+    img_rgb24 = create_image(width, height, RGB24);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Set R values
+        img_rgb24->data[i] = 'R';
+        // Set G values
+        img_rgb24->data[i + 1] = 'G';
+        // Set B values
+        img_rgb24->data[i + 2] = 'B';
+    }
+
+    // Convert image
+    img_rgb8 = convert_RGB24_to_RGB8(img_rgb24);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_rgb8, "Converted RGB8 image couldn't be created");
+    CUTS_ASSERT(img_rgb8->width == width, "Converted RGB8 image has wrong width");
+    CUTS_ASSERT(img_rgb8->height == height, "Converted RGB8 image has wrong height");
+    CUTS_ASSERT(img_rgb8->format == RGB8, "Converted RGB8 image has wrong format");
+
+    for (i = 0; i < width * height; i++) {
+        // Get partial R, G, B
+        partial_r = img_rgb8->data[i] & 0x07;
+        partial_g = (img_rgb8->data[i] >> 3) & 0x7;
+        partial_b = (img_rgb8->data[i] >> 6) & 0x3;
+
+        CUTS_ASSERT(partial_r == ('R' & 0x07), "Wrong R value for RGB8 image on pixel %d", i);
+        CUTS_ASSERT(partial_g == ('G' & 0x07), "Wrong G value for RGB8 image on pixel %d", i);
+        CUTS_ASSERT(partial_b == ('B' & 0x03), "Wrong B value for RGB8 image on pixel %d", i);
+    }
+
+    destroy_image(img_rgb24);
+    destroy_image(img_rgb8);
+
+    return NULL;
+}
+
+
 
 char * all_tests ()
 {
@@ -1482,6 +1532,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444p);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV420p);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB565);
+    CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB8);
 
     return NULL;
 }

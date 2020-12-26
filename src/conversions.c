@@ -871,6 +871,42 @@ Image * convert_RGB24_to_RGB565 (Image * img_rgb24)
 }
 
 
+Image * convert_RGB24_to_RGB8 (Image * img_rgb24)
+{
+    Image * img_rgb8 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r = 0;
+    uint8_t g = 0;
+    uint8_t b = 0;
+
+    if (!img_rgb24) return NULL;
+    if (img_rgb24->format != RGB24) return NULL;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // Allocate memory for new image
+    img_rgb8 = create_image(width, height, RGB8);
+    if (!img_rgb8) return NULL;
+
+    // In RGB8, R is encoded on 3 bits, G on 3 and B on 2, so we have 8 bits per pixel
+    for (i = 0; i < width * height; i++) {
+        // Transform RGB -> YUV
+        r = img_rgb24->data[i * 3];
+        g = img_rgb24->data[i * 3 + 1];
+        b = img_rgb24->data[i * 3 + 2];
+
+        // Put values together in new image
+        // 3 bits of R, 3 bits of G and 2 bits of B
+        img_rgb8->data[i] = (r & 0x07) | ((g & 0x07) << 3) | ((b & 0x03) << 6);
+    }
+
+    return img_rgb8;
+}
+
+
 
 
 
