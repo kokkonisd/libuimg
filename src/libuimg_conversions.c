@@ -1818,6 +1818,48 @@ Image * convert_GRAYSCALE_to_RGB565 (Image * img_grayscale)
 }
 
 
+Image * convert_GRAYSCALE_to_RGB8 (Image * img_grayscale)
+{
+    Image * img_rgb8 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_grayscale) return NULL;
+    if (img_grayscale->format != GRAYSCALE) return NULL;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    // Allocate memory for new image
+    img_rgb8 = create_image(width, height, RGB8);
+    if (!img_rgb8) return NULL;
+
+    // In RGB8, each pixel has 3 bits for R, 3 bits for G and 2 bits for B
+    // Since there is no U, V information in the base image, they will be set to 0
+    for (i = 0; i < width * height; i++) {
+        // Transform YUV -> RGB
+        r_value = yuv_to_rgb_r(img_grayscale->data[i], 0, 0);
+        g_value = yuv_to_rgb_g(img_grayscale->data[i], 0, 0);
+        b_value = yuv_to_rgb_b(img_grayscale->data[i], 0, 0);
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 255, 0, 8);
+        g_value = rescale_color(g_value, 0, 255, 0, 8);
+        b_value = rescale_color(b_value, 0, 255, 0, 4);
+
+        // Put values together in new image
+        // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+    }
+
+    return img_rgb8;
+}
+
+
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
 {
     return (((float) value - old_min) / ((float) old_max - old_min)) * (new_max - new_min) + new_min;
