@@ -226,12 +226,12 @@ char * test_incorrect_conversions ()
 //     CUTS_ASSERT(!convert_RGB565_to_RGB24(dummy_rgb8), "RGB565 to RGB24 should fail for base image RGB8");
 //     CUTS_ASSERT(!convert_RGB565_to_RGB24(dummy_grayscale), "RGB565 to RGB24 should fail for base image GRAYSCALE");
 
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv444p), "RGB565 to YUV444 should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv420p), "RGB565 to YUV444 should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_rgb24), "RGB565 to YUV444 should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv444), "RGB565 to YUV444 should fail for base image YUV444");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_rgb8), "RGB565 to YUV444 should fail for base image RGB8");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_grayscale), "RGB565 to YUV444 should fail for base image GRAYSCALE");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv444p), "RGB565 to YUV444 should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv420p), "RGB565 to YUV444 should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_rgb24), "RGB565 to YUV444 should fail for base image RGB24");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_yuv444), "RGB565 to YUV444 should fail for base image YUV444");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_rgb8), "RGB565 to YUV444 should fail for base image RGB8");
+    CUTS_ASSERT(!convert_RGB565_to_YUV444(dummy_grayscale), "RGB565 to YUV444 should fail for base image GRAYSCALE");
 
 //     CUTS_ASSERT(!convert_RGB565_to_RGB8(dummy_yuv444p), "RGB565 to RGB8 should fail for base image YUV444p");
 //     CUTS_ASSERT(!convert_RGB565_to_RGB8(dummy_yuv420p), "RGB565 to RGB8 should fail for base image YUV420p");
@@ -1244,9 +1244,9 @@ char * test_image_conversion_RGB24_to_YUV444 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    uint8_t y = 0;
-    uint8_t u = 0;
-    uint8_t v = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
     Image * img_rgb24 = NULL;
     Image * img_yuv444 = NULL;
 
@@ -1272,17 +1272,17 @@ char * test_image_conversion_RGB24_to_YUV444 ()
     CUTS_ASSERT(img_yuv444->format == YUV444, "Converted YUV444 image has wrong format");
 
     // Calculate expected values
-    y = rgb_to_yuv_y('R', 'G', 'B');
-    u = rgb_to_yuv_u('R', 'G', 'B');
-    v = rgb_to_yuv_v('R', 'G', 'B');
+    y_value = rgb_to_yuv_y('R', 'G', 'B');
+    u_value = rgb_to_yuv_u('R', 'G', 'B');
+    v_value = rgb_to_yuv_v('R', 'G', 'B');
 
     for (i = 0; i < width * height * 3; i += 3) {
         // Check Y channel
-        CUTS_ASSERT(img_yuv444->data[i] == y, "Wrong Y value for YUV444 image on pixel %d", i / 3);
+        CUTS_ASSERT(img_yuv444->data[i] == y_value, "Wrong Y value for YUV444 image on pixel %d", i / 3);
         // Check U channel
-        CUTS_ASSERT(img_yuv444->data[i + 1] == u, "Wrong U value for YUV444 image on pixel %d", i / 3);
+        CUTS_ASSERT(img_yuv444->data[i + 1] == u_value, "Wrong U value for YUV444 image on pixel %d", i / 3);
         // Check V channel
-        CUTS_ASSERT(img_yuv444->data[i + 2] == v, "Wrong V value for YUV444 image on pixel %d", i / 3);
+        CUTS_ASSERT(img_yuv444->data[i + 2] == v_value, "Wrong V value for YUV444 image on pixel %d", i / 3);
     }
 
     destroy_image(img_rgb24);
@@ -1297,9 +1297,9 @@ char * test_image_conversion_RGB24_to_YUV444p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    uint8_t y = 0;
-    uint8_t u = 0;
-    uint8_t v = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
     Image * img_rgb24 = NULL;
     Image * img_yuv444p = NULL;
 
@@ -1319,9 +1319,9 @@ char * test_image_conversion_RGB24_to_YUV444p ()
     img_yuv444p = convert_RGB24_to_YUV444p(img_rgb24);
 
     // Calculate expected values
-    y = rgb_to_yuv_y('R', 'G', 'B');
-    u = rgb_to_yuv_u('R', 'G', 'B');
-    v = rgb_to_yuv_v('R', 'G', 'B');
+    y_value = rgb_to_yuv_y('R', 'G', 'B');
+    u_value = rgb_to_yuv_u('R', 'G', 'B');
+    v_value = rgb_to_yuv_v('R', 'G', 'B');
 
     // Check that the converted image is okay
     CUTS_ASSERT(img_yuv444p, "Converted YUV444p image couldn't be created");
@@ -1331,11 +1331,11 @@ char * test_image_conversion_RGB24_to_YUV444p ()
 
     for (i = 0; i < width * height; i++) {
         // Check Y channel
-        CUTS_ASSERT(img_yuv444p->data[i] == y, "Wrong Y value for YUV444p image on pixel %d", i);
+        CUTS_ASSERT(img_yuv444p->data[i] == y_value, "Wrong Y value for YUV444p image on pixel %d", i);
         // Check U channel
-        CUTS_ASSERT(img_yuv444p->data[i + width * height] == u, "Wrong U value for YUV444p image on pixel %d", i);
+        CUTS_ASSERT(img_yuv444p->data[i + width * height] == u_value, "Wrong U value for YUV444p image on pixel %d", i);
         // Check V channel
-        CUTS_ASSERT(img_yuv444p->data[i + width * height * 2] == v, "Wrong V value for YUV444p image on pixel %d",
+        CUTS_ASSERT(img_yuv444p->data[i + width * height * 2] == v_value, "Wrong V value for YUV444p image on pixel %d",
                     i);
     }
 
@@ -1351,9 +1351,9 @@ char * test_image_conversion_RGB24_to_YUV420p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    uint8_t y = 0;
-    uint8_t u = 0;
-    uint8_t v = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
     Image * img_rgb24 = NULL;
     Image * img_yuv420p = NULL;
 
@@ -1373,9 +1373,9 @@ char * test_image_conversion_RGB24_to_YUV420p ()
     img_yuv420p = convert_RGB24_to_YUV420p(img_rgb24);
 
     // Calculate expected values
-    y = rgb_to_yuv_y('R', 'G', 'B');
-    u = rgb_to_yuv_u('R', 'G', 'B');
-    v = rgb_to_yuv_v('R', 'G', 'B');
+    y_value = rgb_to_yuv_y('R', 'G', 'B');
+    u_value = rgb_to_yuv_u('R', 'G', 'B');
+    v_value = rgb_to_yuv_v('R', 'G', 'B');
 
     // Check that the converted image is okay
     CUTS_ASSERT(img_yuv420p, "Converted YUV420p image couldn't be created");
@@ -1385,14 +1385,15 @@ char * test_image_conversion_RGB24_to_YUV420p ()
 
     for (i = 0; i < width * height; i++) {
         // Check Y channel
-        CUTS_ASSERT(img_yuv420p->data[i] == y, "Wrong Y value for YUV420p image on pixel %d", i);
+        CUTS_ASSERT(img_yuv420p->data[i] == y_value, "Wrong Y value for YUV420p image on pixel %d", i);
     }
 
     for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
         // Check U channel
-        CUTS_ASSERT(img_yuv420p->data[i] == u, "Wrong U value for YUV420p image on pixel %d", i - width * height);
+        CUTS_ASSERT(img_yuv420p->data[i] == u_value, "Wrong U value for YUV420p image on pixel %d",
+                    i - width * height);
         // Check V channel
-        CUTS_ASSERT(img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] == v,
+        CUTS_ASSERT(img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] == v_value,
                     "Wrong V value for YUV420p image on pixel %d", i - width * height);
     }
 
@@ -1522,7 +1523,7 @@ char * test_image_conversion_RGB24_to_GRAYSCALE ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    uint8_t y = 0;
+    uint8_t y_value = 0;
     Image * img_rgb24 = NULL;
     Image * img_grayscale = NULL;
 
@@ -1542,7 +1543,7 @@ char * test_image_conversion_RGB24_to_GRAYSCALE ()
     img_grayscale = convert_RGB24_to_GRAYSCALE(img_rgb24);
 
     // Calculate expected value
-    y = rgb_to_yuv_y('R', 'G', 'B');
+    y_value = rgb_to_yuv_y('R', 'G', 'B');
 
     // Check that the converted image is okay
     CUTS_ASSERT(img_grayscale, "Converted GRAYSCALE image couldn't be created");
@@ -1552,11 +1553,75 @@ char * test_image_conversion_RGB24_to_GRAYSCALE ()
 
     for (i = 0; i < width * height; i++) {
         // Check Y channel
-        CUTS_ASSERT(img_grayscale->data[i] == y, "Wrong Y value for GRAYSCALE image on pixel %d", i);
+        CUTS_ASSERT(img_grayscale->data[i] == y_value, "Wrong Y value for GRAYSCALE image on pixel %d", i);
     }
 
     destroy_image(img_rgb24);
     destroy_image(img_grayscale);
+
+    return NULL;
+}
+
+
+char * test_image_conversion_RGB565_to_YUV444 ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
+    Image * img_rgb565 = NULL;
+    Image * img_yuv444 = NULL;
+
+    // Create RGB24 image
+    img_rgb565 = create_image(width, height, RGB565);
+
+    // Downscale original values
+    r_value = rescale_color('R', 0, 255, 0, 32);
+    g_value = rescale_color('G', 0, 255, 0, 64);
+    b_value = rescale_color('B', 0, 255, 0, 32);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height; i++) {
+        // MSB | 5 bits of R, 6 bits of G, 5 bits of B | LSB
+        img_rgb565->data[2 * i] = (b_value & 0x1f) | ((g_value & 0x07) << 5);
+        img_rgb565->data[2 * i + 1] = ((g_value & 0x38) >> 3) | ((r_value & 0x1f) << 3);
+    }
+
+    // Convert image
+    img_yuv444 = convert_RGB565_to_YUV444(img_rgb565);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_yuv444, "Converted YUV444 image couldn't be created");
+    CUTS_ASSERT(img_yuv444->width == width, "Converted YUV444 image has wrong width");
+    CUTS_ASSERT(img_yuv444->height == height, "Converted YUV444 image has wrong height");
+    CUTS_ASSERT(img_yuv444->format == YUV444, "Converted YUV444 image has wrong format");
+
+    // Upscale original values
+    r_value = rescale_color(r_value, 0, 32, 0, 255);
+    g_value = rescale_color(g_value, 0, 64, 0, 255);
+    b_value = rescale_color(b_value, 0, 32, 0, 255);
+
+    // Calculate expected values
+    y_value = rgb_to_yuv_y(r_value, g_value, b_value);
+    u_value = rgb_to_yuv_u(r_value, g_value, b_value);
+    v_value = rgb_to_yuv_v(r_value, g_value, b_value);
+
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Check Y channel
+        CUTS_ASSERT(img_yuv444->data[i] == y_value, "Wrong Y value for YUV444 image on pixel %d", i / 3);
+        // Check U channel
+        CUTS_ASSERT(img_yuv444->data[i + 1] == u_value, "Wrong U value for YUV444 image on pixel %d", i / 3);
+        // Check V channel
+        CUTS_ASSERT(img_yuv444->data[i + 2] == v_value, "Wrong V value for YUV444 image on pixel %d", i / 3);
+    }
+
+    destroy_image(img_rgb565);
+    destroy_image(img_yuv444);
 
     return NULL;
 }
@@ -1599,6 +1664,8 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_GRAYSCALE);
+
+    CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV444);
 
     return NULL;
 }
