@@ -3,7 +3,7 @@
 #include "libuimg.h"
 
 
-char * create_YUV444_image ()
+char * test_YUV444_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -22,7 +22,7 @@ char * create_YUV444_image ()
 }
 
 
-char * create_YUV444p_image ()
+char * test_YUV444p_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -41,7 +41,7 @@ char * create_YUV444p_image ()
 }
 
 
-char * create_YUV420p_image ()
+char * test_YUV420p_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -60,7 +60,7 @@ char * create_YUV420p_image ()
 }
 
 
-char * create_RGB24_image ()
+char * test_RGB24_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -79,7 +79,7 @@ char * create_RGB24_image ()
 }
 
 
-char * create_RGB565_image ()
+char * test_RGB565_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -98,7 +98,7 @@ char * create_RGB565_image ()
 }
 
 
-char * create_RGB8_image ()
+char * test_RGB8_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -117,7 +117,7 @@ char * create_RGB8_image ()
 }
 
 
-char * create_GRAYSCALE_image ()
+char * test_GRAYSCALE_image_creation ()
 {
     uint16_t width = 250;
     uint16_t height = 250;
@@ -140,13 +140,13 @@ char * all_tests ()
 {
     CUTS_START();
 
-    CUTS_RUN_TEST(create_YUV444_image);
-    CUTS_RUN_TEST(create_YUV444p_image);
-    CUTS_RUN_TEST(create_YUV420p_image);
-    CUTS_RUN_TEST(create_RGB24_image);
-    CUTS_RUN_TEST(create_RGB565_image);
-    CUTS_RUN_TEST(create_RGB8_image);
-    CUTS_RUN_TEST(create_GRAYSCALE_image);
+    CUTS_RUN_TEST(test_YUV444_image_creation);
+    CUTS_RUN_TEST(test_YUV444p_image_creation);
+    CUTS_RUN_TEST(test_YUV420p_image_creation);
+    CUTS_RUN_TEST(test_RGB24_image_creation);
+    CUTS_RUN_TEST(test_RGB565_image_creation);
+    CUTS_RUN_TEST(test_RGB8_image_creation);
+    CUTS_RUN_TEST(test_GRAYSCALE_image_creation);
 
     return NULL;
 }
