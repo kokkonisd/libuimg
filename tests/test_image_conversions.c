@@ -271,12 +271,12 @@ char * test_incorrect_conversions ()
     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444), "RGB8 to RGB24 should fail for base image YUV444");
     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_grayscale), "RGB8 to RGB24 should fail for base image GRAYSCALE");
 
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv444p), "RGB8 to RGB565 should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv420p), "RGB8 to RGB565 should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_rgb24), "RGB8 to RGB565 should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_rgb565), "RGB8 to RGB565 should fail for base image RGB565");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv444), "RGB8 to RGB565 should fail for base image YUV444");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_grayscale), "RGB8 to RGB565 should fail for base image GRAYSCALE");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv444p), "RGB8 to RGB565 should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv420p), "RGB8 to RGB565 should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_rgb24), "RGB8 to RGB565 should fail for base image RGB24");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_rgb565), "RGB8 to RGB565 should fail for base image RGB565");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv444), "RGB8 to RGB565 should fail for base image YUV444");
+    CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_grayscale), "RGB8 to RGB565 should fail for base image GRAYSCALE");
 
     CUTS_ASSERT(!convert_RGB8_to_YUV444(dummy_yuv444p), "RGB8 to YUV444 should fail for base image YUV444p");
     CUTS_ASSERT(!convert_RGB8_to_YUV444(dummy_yuv420p), "RGB8 to YUV444 should fail for base image YUV420p");
@@ -531,7 +531,7 @@ char * test_image_conversion_YUV444_to_RGB565 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 32);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb565->data[i * 2] & 0x1f;
         actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
         actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
@@ -587,7 +587,7 @@ char * test_image_conversion_YUV444_to_RGB8 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 4);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb8->data[i] & 0x03;
         actual_g = (img_rgb8->data[i] >> 2) & 0x7;
         actual_r = (img_rgb8->data[i] >> 5) & 0x7;
@@ -818,7 +818,7 @@ char * test_image_conversion_YUV444p_to_RGB565 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 32);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb565->data[i * 2] & 0x1f;
         actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
         actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
@@ -874,7 +874,7 @@ char * test_image_conversion_YUV444p_to_RGB8 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 4);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb8->data[i] & 0x03;
         actual_g = (img_rgb8->data[i] >> 2) & 0x07;
         actual_r = (img_rgb8->data[i] >> 5) & 0x07;
@@ -1119,7 +1119,7 @@ char * test_image_conversion_YUV420p_to_RGB565 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 32);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb565->data[i * 2] & 0x1f;
         actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
         actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
@@ -1179,7 +1179,7 @@ char * test_image_conversion_YUV420p_to_RGB8 ()
     expected_b = rescale_color(yuv_to_rgb_b('Y', 'U', 'V'), 0, 255, 0, 4);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb8->data[i] & 0x03;
         actual_g = (img_rgb8->data[i] >> 2) & 0x07;
         actual_r = (img_rgb8->data[i] >> 5) & 0x07;
@@ -1445,7 +1445,7 @@ char * test_image_conversion_RGB24_to_RGB565 ()
     expected_b = rescale_color('B', 0, 255, 0, 32);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb565->data[i * 2] & 0x1f;
         actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
         actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
@@ -1502,7 +1502,7 @@ char * test_image_conversion_RGB24_to_RGB8 ()
     expected_b = rescale_color('B', 0, 255, 0, 4);
 
     for (i = 0; i < width * height; i++) {
-        // Get partial R, G, B
+        // Get actual R, G, B
         actual_b = img_rgb8->data[i] & 0x03;
         actual_g = (img_rgb8->data[i] >> 2) & 0x7;
         actual_r = (img_rgb8->data[i] >> 5) & 0x7;
@@ -2125,6 +2125,7 @@ char * test_image_conversion_RGB8_to_YUV420p ()
     return NULL;
 }
 
+
 char * test_image_conversion_RGB8_to_RGB24 ()
 {
     uint32_t i = 0;
@@ -2181,6 +2182,66 @@ char * test_image_conversion_RGB8_to_RGB24 ()
 }
 
 
+char * test_image_conversion_RGB8_to_RGB565 ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+    uint8_t actual_r = 0;
+    uint8_t actual_g = 0;
+    uint8_t actual_b = 0;
+    Image * img_rgb8 = NULL;
+    Image * img_rgb565 = NULL;
+
+    // Create RGB8 image
+    img_rgb8 = create_image(width, height, RGB8);
+
+    // Downscale original values
+    r_value = rescale_color('R', 0, 255, 0, 8);
+    g_value = rescale_color('G', 0, 255, 0, 8);
+    b_value = rescale_color('B', 0, 255, 0, 4);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height; i++) {
+        // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+    }
+
+    // Convert image
+    img_rgb565 = convert_RGB8_to_RGB565(img_rgb8);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_rgb565, "Converted RGB565 image couldn't be created");
+    CUTS_ASSERT(img_rgb565->width == width, "Converted RGB565 image has wrong width");
+    CUTS_ASSERT(img_rgb565->height == height, "Converted RGB565 image has wrong height");
+    CUTS_ASSERT(img_rgb565->format == RGB565, "Converted RGB565 image has wrong format");
+
+    // Upscale the values to the 565 16-bit range
+    r_value = rescale_color(r_value, 0, 8, 0, 32);
+    g_value = rescale_color(g_value, 0, 8, 0, 64);
+    b_value = rescale_color(b_value, 0, 4, 0, 32);
+
+    for (i = 0; i < width * height; i++) {
+        // Get actual R, G, B
+        actual_b = img_rgb565->data[i * 2] & 0x1f;
+        actual_g = ((img_rgb565->data[i * 2] & 0xe0) >> 5) | ((img_rgb565->data[i * 2 + 1] & 0x07) << 3);
+        actual_r = (img_rgb565->data[i * 2 + 1] & 0xf8) >> 3;
+
+        CUTS_ASSERT(actual_r == (r_value & 0x1f), "Wrong R value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(actual_g == (g_value & 0x3f), "Wrong G value for RGB565 image on pixel %d", i);
+        CUTS_ASSERT(actual_b == (b_value & 0x1f), "Wrong B value for RGB565 image on pixel %d", i);
+    }
+
+    destroy_image(img_rgb8);
+    destroy_image(img_rgb565);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -2226,6 +2287,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444p);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV420p);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_RGB24);
+    CUTS_RUN_TEST(test_image_conversion_RGB8_to_RGB565);
 
     return NULL;
 }

@@ -56,7 +56,7 @@ Image * convert_RGB8_to_YUV444 (Image * img_rgb8);
 Image * convert_RGB8_to_YUV444p (Image * img_rgb8);
 Image * convert_RGB8_to_YUV420p (Image * img_rgb8);
 Image * convert_RGB8_to_RGB24 (Image * img_rgb8);
-Image * convert_RGB8_to_RGB565 (Image * img_rgb8); // TODO
+Image * convert_RGB8_to_RGB565 (Image * img_rgb8);
 Image * convert_RGB8_to_GRAYSCALE (Image * img_rgb8); // TODO
 
 Image * convert_GRAYSCALE_to_YUV444 (Image * img_grayscale); // TODO
