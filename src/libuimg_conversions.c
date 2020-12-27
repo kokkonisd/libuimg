@@ -1296,6 +1296,46 @@ Image * convert_RGB565_to_RGB24 (Image * img_rgb565)
 }
 
 
+Image * convert_RGB565_to_RGB8 (Image * img_rgb565)
+{
+    Image * img_rgb8 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb565) return NULL;
+    if (img_rgb565->format != RGB565) return NULL;
+
+    width = img_rgb565->width;
+    height = img_rgb565->height;
+
+    // Allocate memory for new image
+    img_rgb8 = create_image(width, height, RGB8);
+    if (!img_rgb8) return NULL;
+
+    // In RGB8, R is encoded on 3 bits, G on 3 and B on 2, so we have 8 bits per pixel
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values for base image
+        b_value = img_rgb565->data[2 * i] & 0x1f;
+        g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
+        r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 32, 0, 8);
+        g_value = rescale_color(g_value, 0, 64, 0, 8);
+        b_value = rescale_color(b_value, 0, 32, 0, 4);
+
+        // Put values together in new image
+        // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+    }
+
+    return img_rgb8;
+}
+
 
 
 
@@ -1307,7 +1347,7 @@ Image * convert_RGB565_to_RGB24 (Image * img_rgb565)
 
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
 {
-    return value * (new_max - new_min) / (old_max - old_min);
+    return (((float) value - old_min) / ((float) old_max - old_min)) * (new_max - new_min) + new_min;
 }
 
 
