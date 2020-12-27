@@ -42,14 +42,14 @@ endif
 all: build $(TARGET_STATIC) $(TARGET_DYNAMIC) $(TEST_TARGETS)
 
 
-tests: $(TEST_TARGETS)
+tests: build $(TEST_TARGETS)
 	@for test in $(TEST_TARGETS) ; do \
 		./$$test || exit $(ERROREXIT); \
 		echo "" ; \
 	done
 
 
-memchecks: $(TEST_TARGETS)
+memchecks: build $(TEST_TARGETS)
 ifeq ($(shell uname -s), Linux)
 	@for test in $(TEST_TARGETS) ; do \
 		valgrind --leak-check=full --error-exitcode=1 $$test || exit $(ERROREXIT); \
@@ -63,7 +63,7 @@ else
 endif
 
 
-install: $(TARGET_STATIC) $(TARGET_DYNAMIC)
+install: build $(TARGET_STATIC) $(TARGET_DYNAMIC)
 	install $(TARGET_STATIC) $(PREFIX)/lib/
 	install $(TARGET_DYNAMIC) $(PREFIX)/lib/
 	install $(HEADERS) $(PREFIX)/include/
