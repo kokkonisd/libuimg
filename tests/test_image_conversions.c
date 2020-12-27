@@ -212,12 +212,12 @@ char * test_incorrect_conversions ()
     CUTS_ASSERT(!convert_RGB565_to_YUV444p(dummy_rgb8), "RGB565 to YUV444p should fail for base image RGB8");
     CUTS_ASSERT(!convert_RGB565_to_YUV444p(dummy_grayscale), "RGB565 to YUV444p should fail for base image GRAYSCALE");
 
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv444p), "RGB565 to YUV420p should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv420p), "RGB565 to YUV420p should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_rgb24), "RGB565 to YUV420p should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv444), "RGB565 to YUV420p should fail for base image YUV444");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_rgb8), "RGB565 to YUV420p should fail for base image RGB8");
-//     CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_grayscale), "RGB565 to YUV420p should fail for base image GRAYSCALE");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv444p), "RGB565 to YUV420p should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv420p), "RGB565 to YUV420p should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_rgb24), "RGB565 to YUV420p should fail for base image RGB24");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_yuv444), "RGB565 to YUV420p should fail for base image YUV444");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_rgb8), "RGB565 to YUV420p should fail for base image RGB8");
+    CUTS_ASSERT(!convert_RGB565_to_YUV420p(dummy_grayscale), "RGB565 to YUV420p should fail for base image GRAYSCALE");
 
 //     CUTS_ASSERT(!convert_RGB565_to_RGB24(dummy_yuv444p), "RGB565 to RGB24 should fail for base image YUV444p");
 //     CUTS_ASSERT(!convert_RGB565_to_RGB24(dummy_yuv420p), "RGB565 to RGB24 should fail for base image YUV420p");
@@ -1802,6 +1802,7 @@ char * all_tests ()
 
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV444p);
+    CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV420p);
 
     return NULL;
 }
