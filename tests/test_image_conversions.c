@@ -257,12 +257,12 @@ char * test_incorrect_conversions ()
     CUTS_ASSERT(!convert_RGB8_to_YUV444p(dummy_yuv444), "RGB8 to YUV444p should fail for base image YUV444");
     CUTS_ASSERT(!convert_RGB8_to_YUV444p(dummy_grayscale), "RGB8 to YUV444p should fail for base image GRAYSCALE");
 
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv444p), "RGB8 to YUV420p should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv420p), "RGB8 to YUV420p should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_rgb24), "RGB8 to YUV420p should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_rgb565), "RGB8 to YUV420p should fail for base image RGB565");
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv444), "RGB8 to YUV420p should fail for base image YUV444");
-//     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_grayscale), "RGB8 to YUV420p should fail for base image GRAYSCALE");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv444p), "RGB8 to YUV420p should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv420p), "RGB8 to YUV420p should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_rgb24), "RGB8 to YUV420p should fail for base image RGB24");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_rgb565), "RGB8 to YUV420p should fail for base image RGB565");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv444), "RGB8 to YUV420p should fail for base image YUV444");
+    CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_grayscale), "RGB8 to YUV420p should fail for base image GRAYSCALE");
 
 //     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444p), "RGB8 to RGB24 should fail for base image YUV444p");
 //     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv420p), "RGB8 to RGB24 should fail for base image YUV420p");
@@ -2058,6 +2058,74 @@ char * test_image_conversion_RGB8_to_YUV444p ()
 }
 
 
+char * test_image_conversion_RGB8_to_YUV420p ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+    uint8_t y_value = 0;
+    uint8_t u_value = 0;
+    uint8_t v_value = 0;
+    Image * img_rgb8 = NULL;
+    Image * img_yuv420p = NULL;
+
+    // Create RGB8 image
+    img_rgb8 = create_image(width, height, RGB8);
+
+    // Downscale original values
+    r_value = rescale_color('R', 0, 255, 0, 8);
+    g_value = rescale_color('G', 0, 255, 0, 8);
+    b_value = rescale_color('B', 0, 255, 0, 4);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height; i++) {
+        // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+    }
+
+    // Convert image
+    img_yuv420p = convert_RGB8_to_YUV420p(img_rgb8);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_yuv420p, "Converted YUV420p image couldn't be created");
+    CUTS_ASSERT(img_yuv420p->width == width, "Converted YUV420p image has wrong width");
+    CUTS_ASSERT(img_yuv420p->height == height, "Converted YUV420p image has wrong height");
+    CUTS_ASSERT(img_yuv420p->format == YUV420p, "Converted YUV420p image has wrong format");
+
+    // Upscale original values
+    r_value = rescale_color(r_value, 0, 8, 0, 255);
+    g_value = rescale_color(g_value, 0, 8, 0, 255);
+    b_value = rescale_color(b_value, 0, 4, 0, 255);
+
+    // Calculate expected values
+    y_value = rgb_to_yuv_y(r_value, g_value, b_value);
+    u_value = rgb_to_yuv_u(r_value, g_value, b_value);
+    v_value = rgb_to_yuv_v(r_value, g_value, b_value);
+
+    for (i = 0; i < width * height; i++) {
+        // Check Y channel
+        CUTS_ASSERT(img_yuv420p->data[i] == y_value, "Wrong Y value for YUV420p image on pixel %d", i);
+    }
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Check U channel
+        CUTS_ASSERT(img_yuv420p->data[i] == u_value, "Wrong U value for YUV420p image on pixel %d",
+                    i - width * height);
+        // Check V channel
+        CUTS_ASSERT(img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] == v_value,
+                    "Wrong V value for YUV420p image on pixel %d", i - width * height);
+    }
+
+    destroy_image(img_rgb8);
+    destroy_image(img_yuv420p);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -2101,6 +2169,7 @@ char * all_tests ()
 
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444p);
+    CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV420p);
 
     return NULL;
 }

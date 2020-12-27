@@ -1461,6 +1461,61 @@ Image * convert_RGB8_to_YUV444p (Image * img_rgb8)
 }
 
 
+Image * convert_RGB8_to_YUV420p (Image * img_rgb8)
+{
+    Image * img_yuv420p = NULL;
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint32_t u_offset = 0;
+    uint32_t v_offset = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb8) return NULL;
+    if (img_rgb8->format != RGB8) return NULL;
+
+    width = img_rgb8->width;
+    height = img_rgb8->height;
+
+    // Allocate memory for new image
+    img_yuv420p = create_image(width, height, YUV420p);
+    if (!img_yuv420p) return NULL;
+
+    // In YUV420p, each pixel has one Y, one U and one V value: YYYY U V
+
+    u_offset = width * height;
+    v_offset = u_offset + UROUND_UP(width / 2) * UROUND_UP(height / 2);
+
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Extract R, G and B values
+            b_value = img_rgb8->data[i * width + j] & 0x03;
+            g_value = (img_rgb8->data[i * width + j] >> 2) & 0x07;
+            r_value = (img_rgb8->data[i * width + j] >> 5) & 0x07;
+
+            // Rescale values
+            r_value = rescale_color(r_value, 0, 8, 0, 255);
+            g_value = rescale_color(g_value, 0, 8, 0, 255);
+            b_value = rescale_color(b_value, 0, 4, 0, 255);
+
+            // Transform RGB -> YUV and apply YUV values to new image
+            img_yuv420p->data[i * width + j] = rgb_to_yuv_y(r_value, g_value, b_value);
+            img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = rgb_to_yuv_u(r_value,
+                                                                                                  g_value,
+                                                                                                  b_value);
+            img_yuv420p->data[v_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = rgb_to_yuv_v(r_value,
+                                                                                                  g_value,
+                                                                                                  b_value);
+        }
+    }
+
+    return img_yuv420p;
+}
+
+
 
 
 
