@@ -1516,6 +1516,49 @@ Image * convert_RGB8_to_YUV420p (Image * img_rgb8)
 }
 
 
+Image * convert_RGB8_to_RGB24 (Image * img_rgb8)
+{
+    Image * img_rgb24 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb8) return NULL;
+    if (img_rgb8->format != RGB8) return NULL;
+
+    width = img_rgb8->width;
+    height = img_rgb8->height;
+
+    // Allocate memory for new image
+    img_rgb24 = create_image(width, height, RGB24);
+    if (!img_rgb24) return NULL;
+
+    // In RGB24, each pixel has one R, one G and one B value: RGB RGB RGB RGB
+
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values
+        b_value = img_rgb8->data[i] & 0x03;
+        g_value = (img_rgb8->data[i] >> 2) & 0x07;
+        r_value = (img_rgb8->data[i] >> 5) & 0x07;
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 8, 0, 255);
+        g_value = rescale_color(g_value, 0, 8, 0, 255);
+        b_value = rescale_color(b_value, 0, 4, 0, 255);
+
+        // Apply scaled values to new image
+        img_rgb24->data[3 * i] = r_value;
+        img_rgb24->data[3 * i + 1] = g_value;
+        img_rgb24->data[3 * i + 2] = b_value;
+    }
+
+    return img_rgb24;
+}
+
+
 
 
 

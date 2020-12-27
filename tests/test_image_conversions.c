@@ -264,12 +264,12 @@ char * test_incorrect_conversions ()
     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_yuv444), "RGB8 to YUV420p should fail for base image YUV444");
     CUTS_ASSERT(!convert_RGB8_to_YUV420p(dummy_grayscale), "RGB8 to YUV420p should fail for base image GRAYSCALE");
 
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444p), "RGB8 to RGB24 should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv420p), "RGB8 to RGB24 should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_rgb24), "RGB8 to RGB24 should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_rgb565), "RGB8 to RGB24 should fail for base image RGB565");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444), "RGB8 to RGB24 should fail for base image YUV444");
-//     CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_grayscale), "RGB8 to RGB24 should fail for base image GRAYSCALE");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444p), "RGB8 to RGB24 should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv420p), "RGB8 to RGB24 should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_rgb24), "RGB8 to RGB24 should fail for base image RGB24");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_rgb565), "RGB8 to RGB24 should fail for base image RGB565");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_yuv444), "RGB8 to RGB24 should fail for base image YUV444");
+    CUTS_ASSERT(!convert_RGB8_to_RGB24(dummy_grayscale), "RGB8 to RGB24 should fail for base image GRAYSCALE");
 
 //     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv444p), "RGB8 to RGB565 should fail for base image YUV444p");
 //     CUTS_ASSERT(!convert_RGB8_to_RGB565(dummy_yuv420p), "RGB8 to RGB565 should fail for base image YUV420p");
@@ -2125,6 +2125,61 @@ char * test_image_conversion_RGB8_to_YUV420p ()
     return NULL;
 }
 
+char * test_image_conversion_RGB8_to_RGB24 ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+    Image * img_rgb8 = NULL;
+    Image * img_rgb24 = NULL;
+
+    // Create RGB8 image
+    img_rgb8 = create_image(width, height, RGB8);
+
+    // Downscale original values
+    r_value = rescale_color('R', 0, 255, 0, 8);
+    g_value = rescale_color('G', 0, 255, 0, 8);
+    b_value = rescale_color('B', 0, 255, 0, 4);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height; i++) {
+        // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+        img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+    }
+
+    // Convert image
+    img_rgb24 = convert_RGB8_to_RGB24(img_rgb8);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_rgb24, "Converted RGB24 image couldn't be created");
+    CUTS_ASSERT(img_rgb24->width == width, "Converted RGB24 image has wrong width");
+    CUTS_ASSERT(img_rgb24->height == height, "Converted RGB24 image has wrong height");
+    CUTS_ASSERT(img_rgb24->format == RGB24, "Converted RGB24 image has wrong format");
+
+    // Upscale original values
+    r_value = rescale_color(r_value, 0, 8, 0, 255);
+    g_value = rescale_color(g_value, 0, 8, 0, 255);
+    b_value = rescale_color(b_value, 0, 4, 0, 255);
+
+
+    for (i = 0; i < width * height * 3; i += 3) {
+        // Check Y channel
+        CUTS_ASSERT(img_rgb24->data[i] == r_value, "Wrong R value for RGB24 image on pixel %d", i / 3);
+        // Check U channel
+        CUTS_ASSERT(img_rgb24->data[i + 1] == g_value, "Wrong G value for RGB24 image on pixel %d", i / 3);
+        // Check V channel
+        CUTS_ASSERT(img_rgb24->data[i + 2] == b_value, "Wrong B value for RGB24 image on pixel %d", i / 3);
+    }
+
+    destroy_image(img_rgb8);
+    destroy_image(img_rgb24);
+
+    return NULL;
+}
+
 
 char * all_tests ()
 {
@@ -2170,6 +2225,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444p);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV420p);
+    CUTS_RUN_TEST(test_image_conversion_RGB8_to_RGB24);
 
     return NULL;
 }
