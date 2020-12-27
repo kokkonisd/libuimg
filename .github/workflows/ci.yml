@@ -32,18 +32,8 @@ jobs:
       - uses: actions/checkout@v2
         with:
           submodules: 'recursive'
-      - name: Install dependencies
-        run: pip3 install macgrind
-      - name: Install Docker
-        run: brew install docker docker-machine
-      - name: Start Docker Machine
-        run: brew services start docker-machine
-      - name: Docker Machine default
-        run: docker-machine create --driver virtualbox default
       - name: Make all
         run: DEBUG=0 make
       - name: Run tests
         run: DEBUG=0 make tests
-      - name: Run memory checks
-        run: DEBUG=0 eval "$(docker-machine env default)" && make memchecks
 
