@@ -1641,9 +1641,70 @@ Image * convert_RGB8_to_GRAYSCALE (Image * img_rgb8)
 }
 
 
+Image * convert_GRAYSCALE_to_YUV444 (Image * img_grayscale)
+{
+    Image * img_yuv444 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_grayscale) return NULL;
+    if (img_grayscale->format != GRAYSCALE) return NULL;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    // Allocate memory for new image
+    img_yuv444 = create_image(width, height, YUV444);
+    if (!img_yuv444) return NULL;
+
+    // In YUV444, each pixel has one Y, one U and one V value
+    // Base image: YYYY
+    // New image: YUV YUV YUV YUV
+    // Since there is no U, V information in the base image, they will be set to 0
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_yuv444->data[i * 3] = img_grayscale->data[i];
+        // Set U component to be all zeroes, since there is no U data in the base image
+        img_yuv444->data[i * 3 + 1] = 0;
+        // Set V component to be all zeroes, since there is no U data in the base image
+        img_yuv444->data[i * 3 + 2] = 0;
+    }
+
+    return img_yuv444;
+}
 
 
+Image * convert_GRAYSCALE_to_YUV444p (Image * img_grayscale)
+{
+    Image * img_yuv444p = NULL;
+    uint16_t width = 0;
+    uint16_t height = 0;
 
+    if (!img_grayscale) return NULL;
+    if (img_grayscale->format != GRAYSCALE) return NULL;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    // Allocate memory for new image
+    img_yuv444p = create_image(width, height, YUV444p);
+    if (!img_yuv444p) return NULL;
+
+    // In YUV444p, each pixel has one Y, one U and one V value
+    // Base image: YYYY
+    // New image: YYYY UUUU VVVV
+    // Since there is no U, V information in the base image, they will be set to 0
+    
+    // Copy Y component
+    memcpy(img_yuv444p->data, img_grayscale->data, width * height);
+    // Set U component to be all zeroes, since there is no U data in the base image
+    memset(&img_yuv444p->data[width * height], 0, width * height);
+    // Set V component to be all zeroes, since there is no U data in the base image
+    memset(&img_yuv444p->data[width * height * 2], 0, width * height);
+
+    return img_yuv444p;
+}
 
 
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
