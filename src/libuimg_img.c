@@ -1,7 +1,7 @@
 #include "libuimg_img.h"
 
 
-Image * create_image (uint16_t width, uint16_t height, PixelFormat format)
+Image * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
 {
     uint32_t data_size = 0;
 

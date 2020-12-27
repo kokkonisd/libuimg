@@ -19,18 +19,18 @@ typedef enum {
     RGB565,
     RGB8,
     GRAYSCALE
-} PixelFormat;
+} PixelFormat_t;
 
 
 typedef struct {
     uint16_t width;
     uint16_t height;
-    PixelFormat format;
+    PixelFormat_t format;
     uint8_t * data;
 } Image;
 
 
-Image * create_image (uint16_t width, uint16_t height, PixelFormat format);
+Image * create_image (uint16_t width, uint16_t height, PixelFormat_t format);
 void destroy_image (Image * img);
 
 
