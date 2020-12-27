@@ -1707,6 +1707,40 @@ Image * convert_GRAYSCALE_to_YUV444p (Image * img_grayscale)
 }
 
 
+Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale)
+{
+    Image * img_yuv420p = NULL;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_grayscale) return NULL;
+    if (img_grayscale->format != GRAYSCALE) return NULL;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    // Allocate memory for new image
+    img_yuv420p = create_image(width, height, YUV420p);
+    if (!img_yuv420p) return NULL;
+
+    // In YUV420p, each four Y elements share a pair of U, V elements
+    // Base image: YYYY
+    // New image: YYYY U V
+    // Since there is no U, V information in the base image, they will be set to 0
+    
+    // Copy Y component
+    memcpy(img_yuv420p->data, img_grayscale->data, width * height);
+    // Set U component to be all zeroes, since there is no U data in the base image
+    memset(&img_yuv420p->data[width * height], 0, UROUND_UP(width / 2) * UROUND_UP(height / 2));
+    // Set V component to be all zeroes, since there is no U data in the base image
+    memset(&img_yuv420p->data[width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2)],
+           0,
+           UROUND_UP(width / 2) * UROUND_UP(height / 2) * 2);
+
+    return img_yuv420p;
+}
+
+
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
 {
     return (((float) value - old_min) / ((float) old_max - old_min)) * (new_max - new_min) + new_min;

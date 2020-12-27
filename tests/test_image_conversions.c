@@ -304,14 +304,14 @@ char * test_incorrect_conversions ()
     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV444p(dummy_rgb8), "GRAYSCALE to YUV444p should fail for base image RGB8");
     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV444p(dummy_yuv444), "GRAYSCALE to YUV444p should fail for base image YUV444");
 
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv444p),
-//                 "GRAYSCALE to YUV420p should fail for base image YUV444p");
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv420p),
-//                 "GRAYSCALE to YUV420p should fail for base image YUV420p");
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb24), "GRAYSCALE to YUV420p should fail for base image RGB24");
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb565), "GRAYSCALE to YUV420p should fail for base image RGB565");
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb8), "GRAYSCALE to YUV420p should fail for base image RGB8");
-//     CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv444), "GRAYSCALE to YUV420p should fail for base image YUV444");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv444p),
+                "GRAYSCALE to YUV420p should fail for base image YUV444p");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv420p),
+                "GRAYSCALE to YUV420p should fail for base image YUV420p");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb24), "GRAYSCALE to YUV420p should fail for base image RGB24");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb565), "GRAYSCALE to YUV420p should fail for base image RGB565");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_rgb8), "GRAYSCALE to YUV420p should fail for base image RGB8");
+    CUTS_ASSERT(!convert_GRAYSCALE_to_YUV420p(dummy_yuv444), "GRAYSCALE to YUV420p should fail for base image YUV444");
 
 //     CUTS_ASSERT(!convert_GRAYSCALE_to_RGB24(dummy_yuv444p), "GRAYSCALE to RGB24 should fail for base image YUV444p");
 //     CUTS_ASSERT(!convert_GRAYSCALE_to_RGB24(dummy_yuv420p), "GRAYSCALE to RGB24 should fail for base image YUV420p");
@@ -2378,6 +2378,51 @@ char * test_image_conversion_GRAYSCALE_to_YUV444p ()
 }
 
 
+char * test_image_conversion_GRAYSCALE_to_YUV420p ()
+{
+    uint32_t i = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    Image * img_grayscale = NULL;
+    Image * img_yuv420p = NULL;
+
+    // Create GRAYSCALE image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < width * height; i++) {
+        // Set Y values
+        img_grayscale->data[i] = 'Y';
+    }
+
+    // Convert image
+    img_yuv420p = convert_GRAYSCALE_to_YUV420p(img_grayscale);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_yuv420p, "Converted YUV420p image couldn't be created");
+    CUTS_ASSERT(img_yuv420p->width == width, "Converted YUV420p image has wrong width");
+    CUTS_ASSERT(img_yuv420p->height == height, "Converted YUV420p image has wrong height");
+    CUTS_ASSERT(img_yuv420p->format == YUV420p, "Converted YUV420p image has wrong format");
+
+    for (i = 0; i < width * height; i++) {
+        // Check Y channel
+        CUTS_ASSERT(img_yuv420p->data[i] == 'Y', "Wrong Y value for YUV420p image on pixel %d", i);
+    }
+
+    for (i = width * height; i < width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2); i++) {
+        // Check U channel
+        CUTS_ASSERT(img_yuv420p->data[i] == 0, "Wrong U value for YUV420p image on pixel %d", i - width * height);
+        // Check V channel
+        CUTS_ASSERT(img_yuv420p->data[i + UROUND_UP(width / 2) * UROUND_UP(height / 2)] == 0,
+                    "Wrong V value for YUV420p image on pixel %d", i - width * height);
+    }
+
+    destroy_image(img_grayscale);
+    destroy_image(img_yuv420p);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -2428,6 +2473,7 @@ char * all_tests ()
 
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_YUV444p);
+    CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_YUV420p);
 
     return NULL;
 }
