@@ -17,54 +17,54 @@ uint8_t rgb_to_yuv_u (uint8_t r, uint8_t g, uint8_t b);
 uint8_t rgb_to_yuv_v (uint8_t r, uint8_t g, uint8_t b);
 
 
-Image * convert_YUV444_to_YUV444p (Image * img_yuv444);
-Image * convert_YUV444_to_YUV420p (Image * img_yuv444);
-Image * convert_YUV444_to_RGB24 (Image * img_yuv444);
-Image * convert_YUV444_to_RGB565 (Image * img_yuv444);
-Image * convert_YUV444_to_RGB8 (Image * img_yuv444);
-Image * convert_YUV444_to_GRAYSCALE (Image * img_yuv444);
+Image_t * convert_YUV444_to_YUV444p (Image_t * img_yuv444);
+Image_t * convert_YUV444_to_YUV420p (Image_t * img_yuv444);
+Image_t * convert_YUV444_to_RGB24 (Image_t * img_yuv444);
+Image_t * convert_YUV444_to_RGB565 (Image_t * img_yuv444);
+Image_t * convert_YUV444_to_RGB8 (Image_t * img_yuv444);
+Image_t * convert_YUV444_to_GRAYSCALE (Image_t * img_yuv444);
 
-Image * convert_YUV444p_to_YUV444 (Image * img_yuv444p);
-Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p);
-Image * convert_YUV444p_to_RGB24 (Image * img_yuv444p);
-Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p);
-Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p);
-Image * convert_YUV444p_to_GRAYSCALE (Image * img_yuv444p);
+Image_t * convert_YUV444p_to_YUV444 (Image_t * img_yuv444p);
+Image_t * convert_YUV444p_to_YUV420p (Image_t * img_yuv444p);
+Image_t * convert_YUV444p_to_RGB24 (Image_t * img_yuv444p);
+Image_t * convert_YUV444p_to_RGB565 (Image_t * img_yuv444p);
+Image_t * convert_YUV444p_to_RGB8 (Image_t * img_yuv444p);
+Image_t * convert_YUV444p_to_GRAYSCALE (Image_t * img_yuv444p);
 
-Image * convert_YUV420p_to_YUV444 (Image * img_yuv420p);
-Image * convert_YUV420p_to_YUV444p (Image * img_yuv420p);
-Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p);
-Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p);
-Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p);
-Image * convert_YUV420p_to_GRAYSCALE (Image * img_yuv420p);
+Image_t * convert_YUV420p_to_YUV444 (Image_t * img_yuv420p);
+Image_t * convert_YUV420p_to_YUV444p (Image_t * img_yuv420p);
+Image_t * convert_YUV420p_to_RGB24 (Image_t * img_yuv420p);
+Image_t * convert_YUV420p_to_RGB565 (Image_t * img_yuv420p);
+Image_t * convert_YUV420p_to_RGB8 (Image_t * img_yuv420p);
+Image_t * convert_YUV420p_to_GRAYSCALE (Image_t * img_yuv420p);
 
-Image * convert_RGB24_to_YUV444 (Image * img_rgb24);
-Image * convert_RGB24_to_YUV444p (Image * img_rgb24);
-Image * convert_RGB24_to_YUV420p (Image * img_rgb24);
-Image * convert_RGB24_to_RGB565 (Image * img_rgb24);
-Image * convert_RGB24_to_RGB8 (Image * img_rgb24);
-Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24);
+Image_t * convert_RGB24_to_YUV444 (Image_t * img_rgb24);
+Image_t * convert_RGB24_to_YUV444p (Image_t * img_rgb24);
+Image_t * convert_RGB24_to_YUV420p (Image_t * img_rgb24);
+Image_t * convert_RGB24_to_RGB565 (Image_t * img_rgb24);
+Image_t * convert_RGB24_to_RGB8 (Image_t * img_rgb24);
+Image_t * convert_RGB24_to_GRAYSCALE (Image_t * img_rgb24);
 
-Image * convert_RGB565_to_YUV444 (Image * img_rgb565);
-Image * convert_RGB565_to_YUV444p (Image * img_rgb565);
-Image * convert_RGB565_to_YUV420p (Image * img_rgb565);
-Image * convert_RGB565_to_RGB24 (Image * img_rgb565);
-Image * convert_RGB565_to_RGB8 (Image * img_rgb565);
-Image * convert_RGB565_to_GRAYSCALE (Image * img_rgb565);
+Image_t * convert_RGB565_to_YUV444 (Image_t * img_rgb565);
+Image_t * convert_RGB565_to_YUV444p (Image_t * img_rgb565);
+Image_t * convert_RGB565_to_YUV420p (Image_t * img_rgb565);
+Image_t * convert_RGB565_to_RGB24 (Image_t * img_rgb565);
+Image_t * convert_RGB565_to_RGB8 (Image_t * img_rgb565);
+Image_t * convert_RGB565_to_GRAYSCALE (Image_t * img_rgb565);
 
-Image * convert_RGB8_to_YUV444 (Image * img_rgb8);
-Image * convert_RGB8_to_YUV444p (Image * img_rgb8);
-Image * convert_RGB8_to_YUV420p (Image * img_rgb8);
-Image * convert_RGB8_to_RGB24 (Image * img_rgb8);
-Image * convert_RGB8_to_RGB565 (Image * img_rgb8);
-Image * convert_RGB8_to_GRAYSCALE (Image * img_rgb8);
+Image_t * convert_RGB8_to_YUV444 (Image_t * img_rgb8);
+Image_t * convert_RGB8_to_YUV444p (Image_t * img_rgb8);
+Image_t * convert_RGB8_to_YUV420p (Image_t * img_rgb8);
+Image_t * convert_RGB8_to_RGB24 (Image_t * img_rgb8);
+Image_t * convert_RGB8_to_RGB565 (Image_t * img_rgb8);
+Image_t * convert_RGB8_to_GRAYSCALE (Image_t * img_rgb8);
 
-Image * convert_GRAYSCALE_to_YUV444 (Image * img_grayscale);
-Image * convert_GRAYSCALE_to_YUV444p (Image * img_grayscale);
-Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale);
-Image * convert_GRAYSCALE_to_RGB24 (Image * img_grayscale);
-Image * convert_GRAYSCALE_to_RGB565 (Image * img_grayscale);
-Image * convert_GRAYSCALE_to_RGB8 (Image * img_grayscale);
+Image_t * convert_GRAYSCALE_to_YUV444 (Image_t * img_grayscale);
+Image_t * convert_GRAYSCALE_to_YUV444p (Image_t * img_grayscale);
+Image_t * convert_GRAYSCALE_to_YUV420p (Image_t * img_grayscale);
+Image_t * convert_GRAYSCALE_to_RGB24 (Image_t * img_grayscale);
+Image_t * convert_GRAYSCALE_to_RGB565 (Image_t * img_grayscale);
+Image_t * convert_GRAYSCALE_to_RGB8 (Image_t * img_grayscale);
 
 
 #endif

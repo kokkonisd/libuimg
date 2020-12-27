@@ -2,9 +2,9 @@
 #include "libuimg_conversions.h"
 
 
-Image * convert_YUV444_to_YUV444p (Image * img_yuv444)
+Image_t * convert_YUV444_to_YUV444p (Image_t * img_yuv444)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -35,9 +35,9 @@ Image * convert_YUV444_to_YUV444p (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
+Image_t * convert_YUV444_to_YUV420p (Image_t * img_yuv444)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint32_t u_offset = 0;
@@ -79,9 +79,9 @@ Image * convert_YUV444_to_YUV420p (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_RGB24 (Image * img_yuv444)
+Image_t * convert_YUV444_to_RGB24 (Image_t * img_yuv444)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -118,9 +118,9 @@ Image * convert_YUV444_to_RGB24 (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_RGB565 (Image * img_yuv444)
+Image_t * convert_YUV444_to_RGB565 (Image_t * img_yuv444)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -168,9 +168,9 @@ Image * convert_YUV444_to_RGB565 (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_RGB8 (Image * img_yuv444)
+Image_t * convert_YUV444_to_RGB8 (Image_t * img_yuv444)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -217,9 +217,9 @@ Image * convert_YUV444_to_RGB8 (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444_to_GRAYSCALE (Image * img_yuv444)
+Image_t * convert_YUV444_to_GRAYSCALE (Image_t * img_yuv444)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -246,9 +246,9 @@ Image * convert_YUV444_to_GRAYSCALE (Image * img_yuv444)
 }
 
 
-Image * convert_YUV444p_to_YUV444 (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_YUV444 (Image_t * img_yuv444p)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -279,9 +279,9 @@ Image * convert_YUV444p_to_YUV444 (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_YUV420p (Image_t * img_yuv444p)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint32_t u_offset = 0;
@@ -325,9 +325,9 @@ Image * convert_YUV444p_to_YUV420p (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV444p_to_RGB24 (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_RGB24 (Image_t * img_yuv444p)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -364,9 +364,9 @@ Image * convert_YUV444p_to_RGB24 (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_RGB565 (Image_t * img_yuv444p)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -414,9 +414,9 @@ Image * convert_YUV444p_to_RGB565 (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_RGB8 (Image_t * img_yuv444p)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -463,9 +463,9 @@ Image * convert_YUV444p_to_RGB8 (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV444p_to_GRAYSCALE (Image * img_yuv444p)
+Image_t * convert_YUV444p_to_GRAYSCALE (Image_t * img_yuv444p)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -492,9 +492,9 @@ Image * convert_YUV444p_to_GRAYSCALE (Image * img_yuv444p)
 }
 
 
-Image * convert_YUV420p_to_YUV444 (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_YUV444 (Image_t * img_yuv420p)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint16_t width = 0;
@@ -572,9 +572,9 @@ Image * convert_YUV420p_to_YUV444 (Image * img_yuv420p)
 }
 
 
-Image * convert_YUV420p_to_YUV444p (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_YUV444p (Image_t * img_yuv420p)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint16_t width = 0;
@@ -662,9 +662,9 @@ Image * convert_YUV420p_to_YUV444p (Image * img_yuv420p)
 }
 
 
-Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_RGB24 (Image_t * img_yuv420p)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint16_t width = 0;
@@ -714,9 +714,9 @@ Image * convert_YUV420p_to_RGB24 (Image * img_yuv420p)
 }
 
 
-Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_RGB565 (Image_t * img_yuv420p)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint16_t width = 0;
@@ -777,9 +777,9 @@ Image * convert_YUV420p_to_RGB565 (Image * img_yuv420p)
 }
 
 
-Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_RGB8 (Image_t * img_yuv420p)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint16_t width = 0;
@@ -838,9 +838,9 @@ Image * convert_YUV420p_to_RGB8 (Image * img_yuv420p)
 }
 
 
-Image * convert_YUV420p_to_GRAYSCALE (Image * img_yuv420p)
+Image_t * convert_YUV420p_to_GRAYSCALE (Image_t * img_yuv420p)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -867,9 +867,9 @@ Image * convert_YUV420p_to_GRAYSCALE (Image * img_yuv420p)
 }
 
 
-Image * convert_RGB24_to_YUV444 (Image * img_rgb24)
+Image_t * convert_RGB24_to_YUV444 (Image_t * img_rgb24)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -908,9 +908,9 @@ Image * convert_RGB24_to_YUV444 (Image * img_rgb24)
 }
 
 
-Image * convert_RGB24_to_YUV444p (Image * img_rgb24)
+Image_t * convert_RGB24_to_YUV444p (Image_t * img_rgb24)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -949,9 +949,9 @@ Image * convert_RGB24_to_YUV444p (Image * img_rgb24)
 }
 
 
-Image * convert_RGB24_to_YUV420p (Image * img_rgb24)
+Image_t * convert_RGB24_to_YUV420p (Image_t * img_rgb24)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint32_t u_offset = 0;
@@ -1005,9 +1005,9 @@ Image * convert_RGB24_to_YUV420p (Image * img_rgb24)
 }
 
 
-Image * convert_RGB24_to_RGB565 (Image * img_rgb24)
+Image_t * convert_RGB24_to_RGB565 (Image_t * img_rgb24)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1042,9 +1042,9 @@ Image * convert_RGB24_to_RGB565 (Image * img_rgb24)
 }
 
 
-Image * convert_RGB24_to_RGB8 (Image * img_rgb24)
+Image_t * convert_RGB24_to_RGB8 (Image_t * img_rgb24)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1078,9 +1078,9 @@ Image * convert_RGB24_to_RGB8 (Image * img_rgb24)
 }
 
 
-Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24)
+Image_t * convert_RGB24_to_GRAYSCALE (Image_t * img_rgb24)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1111,9 +1111,9 @@ Image * convert_RGB24_to_GRAYSCALE (Image * img_rgb24)
 }
 
 
-Image * convert_RGB565_to_YUV444 (Image * img_rgb565)
+Image_t * convert_RGB565_to_YUV444 (Image_t * img_rgb565)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1154,9 +1154,9 @@ Image * convert_RGB565_to_YUV444 (Image * img_rgb565)
 }
 
 
-Image * convert_RGB565_to_YUV444p (Image * img_rgb565)
+Image_t * convert_RGB565_to_YUV444p (Image_t * img_rgb565)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1197,9 +1197,9 @@ Image * convert_RGB565_to_YUV444p (Image * img_rgb565)
 }
 
 
-Image * convert_RGB565_to_YUV420p (Image * img_rgb565)
+Image_t * convert_RGB565_to_YUV420p (Image_t * img_rgb565)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint32_t u_offset = 0;
@@ -1253,9 +1253,9 @@ Image * convert_RGB565_to_YUV420p (Image * img_rgb565)
 }
 
 
-Image * convert_RGB565_to_RGB24 (Image * img_rgb565)
+Image_t * convert_RGB565_to_RGB24 (Image_t * img_rgb565)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1296,9 +1296,9 @@ Image * convert_RGB565_to_RGB24 (Image * img_rgb565)
 }
 
 
-Image * convert_RGB565_to_RGB8 (Image * img_rgb565)
+Image_t * convert_RGB565_to_RGB8 (Image_t * img_rgb565)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1337,9 +1337,9 @@ Image * convert_RGB565_to_RGB8 (Image * img_rgb565)
 }
 
 
-Image * convert_RGB565_to_GRAYSCALE (Image * img_rgb565)
+Image_t * convert_RGB565_to_GRAYSCALE (Image_t * img_rgb565)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1377,9 +1377,9 @@ Image * convert_RGB565_to_GRAYSCALE (Image * img_rgb565)
 }
 
 
-Image * convert_RGB8_to_YUV444 (Image * img_rgb8)
+Image_t * convert_RGB8_to_YUV444 (Image_t * img_rgb8)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1419,9 +1419,9 @@ Image * convert_RGB8_to_YUV444 (Image * img_rgb8)
 }
 
 
-Image * convert_RGB8_to_YUV444p (Image * img_rgb8)
+Image_t * convert_RGB8_to_YUV444p (Image_t * img_rgb8)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1461,9 +1461,9 @@ Image * convert_RGB8_to_YUV444p (Image * img_rgb8)
 }
 
 
-Image * convert_RGB8_to_YUV420p (Image * img_rgb8)
+Image_t * convert_RGB8_to_YUV420p (Image_t * img_rgb8)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint32_t i = 0;
     uint32_t j = 0;
     uint32_t u_offset = 0;
@@ -1516,9 +1516,9 @@ Image * convert_RGB8_to_YUV420p (Image * img_rgb8)
 }
 
 
-Image * convert_RGB8_to_RGB24 (Image * img_rgb8)
+Image_t * convert_RGB8_to_RGB24 (Image_t * img_rgb8)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1559,9 +1559,9 @@ Image * convert_RGB8_to_RGB24 (Image * img_rgb8)
 }
 
 
-Image * convert_RGB8_to_RGB565 (Image * img_rgb8)
+Image_t * convert_RGB8_to_RGB565 (Image_t * img_rgb8)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1601,9 +1601,9 @@ Image * convert_RGB8_to_RGB565 (Image * img_rgb8)
 }
 
 
-Image * convert_RGB8_to_GRAYSCALE (Image * img_rgb8)
+Image_t * convert_RGB8_to_GRAYSCALE (Image_t * img_rgb8)
 {
-    Image * img_grayscale = NULL;
+    Image_t * img_grayscale = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1641,9 +1641,9 @@ Image * convert_RGB8_to_GRAYSCALE (Image * img_rgb8)
 }
 
 
-Image * convert_GRAYSCALE_to_YUV444 (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_YUV444 (Image_t * img_grayscale)
 {
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1675,9 +1675,9 @@ Image * convert_GRAYSCALE_to_YUV444 (Image * img_grayscale)
 }
 
 
-Image * convert_GRAYSCALE_to_YUV444p (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_YUV444p (Image_t * img_grayscale)
 {
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444p = NULL;
     uint16_t width = 0;
     uint16_t height = 0;
 
@@ -1707,9 +1707,9 @@ Image * convert_GRAYSCALE_to_YUV444p (Image * img_grayscale)
 }
 
 
-Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_YUV420p (Image_t * img_grayscale)
 {
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv420p = NULL;
     uint16_t width = 0;
     uint16_t height = 0;
 
@@ -1741,9 +1741,9 @@ Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale)
 }
 
 
-Image * convert_GRAYSCALE_to_RGB24 (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_RGB24 (Image_t * img_grayscale)
 {
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb24 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1775,9 +1775,9 @@ Image * convert_GRAYSCALE_to_RGB24 (Image * img_grayscale)
 }
 
 
-Image * convert_GRAYSCALE_to_RGB565 (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_RGB565 (Image_t * img_grayscale)
 {
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb565 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
@@ -1818,9 +1818,9 @@ Image * convert_GRAYSCALE_to_RGB565 (Image * img_grayscale)
 }
 
 
-Image * convert_GRAYSCALE_to_RGB8 (Image * img_grayscale)
+Image_t * convert_GRAYSCALE_to_RGB8 (Image_t * img_grayscale)
 {
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb8 = NULL;
     uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;

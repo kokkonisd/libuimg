@@ -38,6 +38,48 @@ $ PREFIX=path/to/install/dir make install
 By default, `PREFIX` is set to `/usr/local/`.
 
 
+## how to use
+
+In order to get access to every element of `libuimg`'s API, all you need to do is include its main header file:
+
+```c
+#include "libuimg.h"
+```
+
+The basic building block of the API is the `Image_t` structure; for example, in order to create a simple RGB24 image
+of dimensions 200x200 (pixels) all you need to do is:
+
+```c
+Image_t * my_image = create_image(200, 200, RGB24);
+
+// ... do stuff with image here ...
+
+destroy_image(my_image);
+```
+
+The following pixel formats are currently supported:
+
+| Format name  | Packed or planar | Bits per pixel            | Example (4 pixels)          |
+| ------------ | ---------------- | ------------------------- | --------------------------- |
+| YUV444       | Packed           | 24                        | Y0U0V0 Y1U1V1 Y2U2V2 Y3U3V3 |
+| YUV444p      | Planar           | 24                        | Y0Y1Y2Y3 U0U1U2U3 V0V1V2V3  |
+| YUV420p      | Planar           | 16                        | Y0Y1Y2Y3 U0 V0              |
+| RGB24        | Packed           | 24                        | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
+| RGB565       | Packed           | 16 ([MSB] 5R 6G 5B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
+| RGB8         | Packed           | 8  ([MSB] 3R 3G 2B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
+| GRAYSCALE    | Packed           | 8                         | Y0 Y1 Y2 Y3                 |
+
+Conversions are supported to and from any of these formats, like so:
+
+```c
+// Conversion functions look like `convert_<base_format>_to_<new_format>()`
+Image_t * yuv444p_image = convert_YUV444_to_YUV444p(yuv444_image);
+Image_t * grayscale_image = convert_RGB24_to_GRAYSCALE(rgb24_image);
+Image_t * yuv420p_image = convert_RGB565_to_YUV420p(rgb565_image);
+// ... etc
+```
+
+
 ## developer notes
 
 Testing is done via [cuts](https://github.com/sorjente/cuts). In order to run tests, simply run:

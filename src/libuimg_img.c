@@ -1,12 +1,12 @@
 #include "libuimg_img.h"
 
 
-Image * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
+Image_t * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
 {
     uint32_t data_size = 0;
 
     // Create new image
-    Image * new_image = calloc(1, sizeof(Image));
+    Image_t * new_image = calloc(1, sizeof(Image_t));
     if (!new_image) return NULL;
 
     // Fill in width, height and pixel format
@@ -46,7 +46,7 @@ Image * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
 }
 
 
-void destroy_image (Image * img)
+void destroy_image (Image_t * img)
 {
     if (img->data) free(img->data);
     if (img) free(img);

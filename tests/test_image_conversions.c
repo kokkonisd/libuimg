@@ -9,13 +9,13 @@
 char * test_incorrect_conversions ()
 {
     // Conversion functions should explicitly check that the image passed to them is of the appropriate format
-    Image * dummy_yuv444 = create_image(TEST_WIDTH, TEST_HEIGHT, YUV444);
-    Image * dummy_yuv444p = create_image(TEST_WIDTH, TEST_HEIGHT, YUV444p);
-    Image * dummy_yuv420p = create_image(TEST_WIDTH, TEST_HEIGHT, YUV420p);
-    Image * dummy_rgb24 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB24);
-    Image * dummy_rgb565 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB565);
-    Image * dummy_rgb8 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB8);
-    Image * dummy_grayscale = create_image(TEST_WIDTH, TEST_HEIGHT, GRAYSCALE);
+    Image_t * dummy_yuv444 = create_image(TEST_WIDTH, TEST_HEIGHT, YUV444);
+    Image_t * dummy_yuv444p = create_image(TEST_WIDTH, TEST_HEIGHT, YUV444p);
+    Image_t * dummy_yuv420p = create_image(TEST_WIDTH, TEST_HEIGHT, YUV420p);
+    Image_t * dummy_rgb24 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB24);
+    Image_t * dummy_rgb565 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB565);
+    Image_t * dummy_rgb8 = create_image(TEST_WIDTH, TEST_HEIGHT, RGB8);
+    Image_t * dummy_grayscale = create_image(TEST_WIDTH, TEST_HEIGHT, GRAYSCALE);
 
 
     // Check that wrong conversions fail
@@ -360,8 +360,8 @@ char * test_image_conversion_YUV444_to_YUV444p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444 = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -404,8 +404,8 @@ char * test_image_conversion_YUV444_to_YUV420p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444 = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -451,8 +451,8 @@ char * test_image_conversion_YUV444_to_RGB24 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444 = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -503,8 +503,8 @@ char * test_image_conversion_YUV444_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv444 = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -559,8 +559,8 @@ char * test_image_conversion_YUV444_to_RGB8 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv444 = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -609,8 +609,8 @@ char * test_image_conversion_YUV444_to_GRAYSCALE ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444 = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create YUV444 image
     img_yuv444 = create_image(width, height, YUV444);
@@ -648,8 +648,8 @@ char * test_image_conversion_YUV444p_to_YUV444 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444p = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -691,8 +691,8 @@ char * test_image_conversion_YUV444p_to_YUV420p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444p = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -738,8 +738,8 @@ char * test_image_conversion_YUV444p_to_RGB24 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444p = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -790,8 +790,8 @@ char * test_image_conversion_YUV444p_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv444p = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -846,8 +846,8 @@ char * test_image_conversion_YUV444p_to_RGB8 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv444p = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -896,8 +896,8 @@ char * test_image_conversion_YUV444p_to_GRAYSCALE ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv444p = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create YUV444p image
     img_yuv444p = create_image(width, height, YUV444p);
@@ -935,8 +935,8 @@ char * test_image_conversion_YUV420p_to_YUV444 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv420p = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -982,8 +982,8 @@ char * test_image_conversion_YUV420p_to_YUV444p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv420p = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -1031,8 +1031,8 @@ char * test_image_conversion_YUV420p_to_RGB24 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv420p = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -1087,8 +1087,8 @@ char * test_image_conversion_YUV420p_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv420p = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -1147,8 +1147,8 @@ char * test_image_conversion_YUV420p_to_RGB8 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_yuv420p = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -1201,8 +1201,8 @@ char * test_image_conversion_YUV420p_to_GRAYSCALE ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_yuv420p = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create YUV420p image
     img_yuv420p = create_image(width, height, YUV420p);
@@ -1247,8 +1247,8 @@ char * test_image_conversion_RGB24_to_YUV444 ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1300,8 +1300,8 @@ char * test_image_conversion_RGB24_to_YUV444p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1355,8 +1355,8 @@ char * test_image_conversion_RGB24_to_YUV420p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1416,8 +1416,8 @@ char * test_image_conversion_RGB24_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1473,8 +1473,8 @@ char * test_image_conversion_RGB24_to_RGB8 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1525,8 +1525,8 @@ char * test_image_conversion_RGB24_to_GRAYSCALE ()
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
     uint8_t y_value = 0;
-    Image * img_rgb24 = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create RGB24 image
     img_rgb24 = create_image(width, height, RGB24);
@@ -1575,8 +1575,8 @@ char * test_image_conversion_RGB565_to_YUV444 ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create RGB565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1639,8 +1639,8 @@ char * test_image_conversion_RGB565_to_YUV444p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create RGB565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1705,8 +1705,8 @@ char * test_image_conversion_RGB565_to_YUV420p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create RGB565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1771,8 +1771,8 @@ char * test_image_conversion_RGB565_to_RGB24 ()
     uint8_t r_value = 0;
     uint8_t g_value = 0;
     uint8_t b_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create RGB565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1828,8 +1828,8 @@ char * test_image_conversion_RGB565_to_RGB8 ()
     uint8_t r_value = 0;
     uint8_t g_value = 0;
     uint8_t b_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create RGΒ565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1884,8 +1884,8 @@ char * test_image_conversion_RGB565_to_GRAYSCALE ()
     uint8_t g_value = 0;
     uint8_t b_value = 0;
     uint8_t y_value = 0;
-    Image * img_rgb565 = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create RGΒ565 image
     img_rgb565 = create_image(width, height, RGB565);
@@ -1941,8 +1941,8 @@ char * test_image_conversion_RGB8_to_YUV444 ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2004,8 +2004,8 @@ char * test_image_conversion_RGB8_to_YUV444p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2069,8 +2069,8 @@ char * test_image_conversion_RGB8_to_YUV420p ()
     uint8_t y_value = 0;
     uint8_t u_value = 0;
     uint8_t v_value = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2134,8 +2134,8 @@ char * test_image_conversion_RGB8_to_RGB24 ()
     uint8_t r_value = 0;
     uint8_t g_value = 0;
     uint8_t b_value = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2193,8 +2193,8 @@ char * test_image_conversion_RGB8_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2251,8 +2251,8 @@ char * test_image_conversion_RGB8_to_GRAYSCALE ()
     uint8_t g_value = 0;
     uint8_t b_value = 0;
     uint8_t y_value = 0;
-    Image * img_rgb8 = NULL;
-    Image * img_grayscale = NULL;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_grayscale = NULL;
 
     // Create RGB8 image
     img_rgb8 = create_image(width, height, RGB8);
@@ -2300,8 +2300,8 @@ char * test_image_conversion_GRAYSCALE_to_YUV444 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_grayscale = NULL;
-    Image * img_yuv444 = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_yuv444 = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);
@@ -2341,8 +2341,8 @@ char * test_image_conversion_GRAYSCALE_to_YUV444p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_grayscale = NULL;
-    Image * img_yuv444p = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_yuv444p = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);
@@ -2383,8 +2383,8 @@ char * test_image_conversion_GRAYSCALE_to_YUV420p ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_grayscale = NULL;
-    Image * img_yuv420p = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_yuv420p = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);
@@ -2428,8 +2428,8 @@ char * test_image_conversion_GRAYSCALE_to_RGB24 ()
     uint32_t i = 0;
     uint16_t width = TEST_WIDTH;
     uint16_t height = TEST_HEIGHT;
-    Image * img_grayscale = NULL;
-    Image * img_rgb24 = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_rgb24 = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);
@@ -2478,8 +2478,8 @@ char * test_image_conversion_GRAYSCALE_to_RGB565 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_grayscale = NULL;
-    Image * img_rgb565 = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_rgb565 = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);
@@ -2532,8 +2532,8 @@ char * test_image_conversion_GRAYSCALE_to_RGB8 ()
     uint8_t actual_r = 0;
     uint8_t actual_g = 0;
     uint8_t actual_b = 0;
-    Image * img_grayscale = NULL;
-    Image * img_rgb8 = NULL;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_rgb8 = NULL;
 
     // Create GRAYSCALE image
     img_grayscale = create_image(width, height, GRAYSCALE);

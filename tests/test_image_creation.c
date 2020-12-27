@@ -8,7 +8,7 @@ char * test_YUV444_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, YUV444);
+    Image_t * img = create_image(width, height, YUV444);
     CUTS_ASSERT(img, "YUV444 image creation failed");
 
     CUTS_ASSERT(img->width == width, "YUV444 image has wrong width");
@@ -27,7 +27,7 @@ char * test_YUV444p_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, YUV444p);
+    Image_t * img = create_image(width, height, YUV444p);
     CUTS_ASSERT(img, "YUV444p image creation failed");
 
     CUTS_ASSERT(img->width == width, "YUV444p image has wrong width");
@@ -46,7 +46,7 @@ char * test_YUV420p_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, YUV420p);
+    Image_t * img = create_image(width, height, YUV420p);
     CUTS_ASSERT(img, "YUV420p image creation failed");
 
     CUTS_ASSERT(img->width == width, "YUV420p image has wrong width");
@@ -65,7 +65,7 @@ char * test_RGB24_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, RGB24);
+    Image_t * img = create_image(width, height, RGB24);
     CUTS_ASSERT(img, "RGB24 image creation failed");
 
     CUTS_ASSERT(img->width == width, "RGB24 image has wrong width");
@@ -84,7 +84,7 @@ char * test_RGB565_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, RGB565);
+    Image_t * img = create_image(width, height, RGB565);
     CUTS_ASSERT(img, "RGB565 image creation failed");
 
     CUTS_ASSERT(img->width == width, "RGB565 image has wrong width");
@@ -103,7 +103,7 @@ char * test_RGB8_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, RGB8);
+    Image_t * img = create_image(width, height, RGB8);
     CUTS_ASSERT(img, "RGB8 image creation failed");
 
     CUTS_ASSERT(img->width == width, "RGB8 image has wrong width");
@@ -122,7 +122,7 @@ char * test_GRAYSCALE_image_creation ()
     uint16_t width = 250;
     uint16_t height = 250;
 
-    Image * img = create_image(width, height, GRAYSCALE);
+    Image_t * img = create_image(width, height, GRAYSCALE);
     CUTS_ASSERT(img, "GRAYSCALE image creation failed");
 
     CUTS_ASSERT(img->width == width, "GRAYSCALE image has wrong width");

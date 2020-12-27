@@ -6,8 +6,6 @@
 #include <stdlib.h>
 
 
-#define VERSION 0.0.1
-
 #define UROUND_UP(x) (((uint32_t) (x)) < ((float) x) ? ((uint32_t) (x)) + 1 : ((uint32_t) (x)))
 
 
@@ -27,11 +25,11 @@ typedef struct {
     uint16_t height;
     PixelFormat_t format;
     uint8_t * data;
-} Image;
+} Image_t;
 
 
-Image * create_image (uint16_t width, uint16_t height, PixelFormat_t format);
-void destroy_image (Image * img);
+Image_t * create_image (uint16_t width, uint16_t height, PixelFormat_t format);
+void destroy_image (Image_t * img);
 
 
 #endif
