@@ -1735,7 +1735,7 @@ Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale)
     // Set V component to be all zeroes, since there is no U data in the base image
     memset(&img_yuv420p->data[width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2)],
            0,
-           UROUND_UP(width / 2) * UROUND_UP(height / 2) * 2);
+           UROUND_UP(width / 2) * UROUND_UP(height / 2));
 
     return img_yuv420p;
 }
