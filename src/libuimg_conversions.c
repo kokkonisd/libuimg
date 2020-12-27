@@ -1741,6 +1741,40 @@ Image * convert_GRAYSCALE_to_YUV420p (Image * img_grayscale)
 }
 
 
+Image * convert_GRAYSCALE_to_RGB24 (Image * img_grayscale)
+{
+    Image * img_rgb24 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_grayscale) return NULL;
+    if (img_grayscale->format != GRAYSCALE) return NULL;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    // Allocate memory for new image
+    img_rgb24 = create_image(width, height, RGB24);
+    if (!img_rgb24) return NULL;
+
+    // In RGB24, each pixel has one R, one G and one B value
+    // Base image: YYYY
+    // New image: RGB RGB RGB RGB
+    // Since there is no U, V information in the base image, they will be set to 0
+    for (i = 0; i < width * height; i++) {
+        // Set R component
+        img_rgb24->data[i * 3] = yuv_to_rgb_r(img_grayscale->data[i], 0, 0);
+        // Set G component
+        img_rgb24->data[i * 3 + 1] = yuv_to_rgb_g(img_grayscale->data[i], 0, 0);
+        // Set B component
+        img_rgb24->data[i * 3 + 2] = yuv_to_rgb_b(img_grayscale->data[i], 0, 0);
+    }
+
+    return img_rgb24;
+}
+
+
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
 {
     return (((float) value - old_min) / ((float) old_max - old_min)) * (new_max - new_min) + new_min;
