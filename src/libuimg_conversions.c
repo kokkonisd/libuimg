@@ -1228,9 +1228,10 @@ Image * convert_RGB565_to_YUV420p (Image * img_rgb565)
     for (i = 0; i < height; i++) {
         for (j = 0; j < width; j++) {
             // Extract R, G and B values
-            b_value = img_rgb565->data[2 * i] & 0x1f;
-            g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
-            r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
+            b_value = img_rgb565->data[i * 2 * width + j * 2] & 0x1f;
+            g_value = ((img_rgb565->data[i * 2 * width + j * 2] & 0xe0) >> 5) |
+                      ((img_rgb565->data[i * 2 * width + j * 2 + 1] & 0x07) << 3);
+            r_value = (img_rgb565->data[i * 2 * width + j * 2 + 1] & 0xf8) >> 3;
 
             // Rescale values
             r_value = rescale_color(r_value, 0, 32, 0, 255);
