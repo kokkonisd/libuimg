@@ -1377,6 +1377,47 @@ Image * convert_RGB565_to_GRAYSCALE (Image * img_rgb565)
 }
 
 
+Image * convert_RGB8_to_YUV444 (Image * img_rgb8)
+{
+    Image * img_yuv444 = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb8) return NULL;
+    if (img_rgb8->format != RGB8) return NULL;
+
+    width = img_rgb8->width;
+    height = img_rgb8->height;
+
+    // Allocate memory for new image
+    img_yuv444 = create_image(width, height, YUV444);
+    if (!img_yuv444) return NULL;
+
+    // In YUV444, each pixel has one Y, one U and one V value: YUV YUV YUV YUV
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values
+        b_value = img_rgb8->data[i] & 0x03;
+        g_value = (img_rgb8->data[i] >> 2) & 0x07;
+        r_value = (img_rgb8->data[i] >> 5) & 0x07;
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 8, 0, 255);
+        g_value = rescale_color(g_value, 0, 8, 0, 255);
+        b_value = rescale_color(b_value, 0, 4, 0, 255);
+
+        // Transform RGB -> YUV and apply YUV values to new image
+        img_yuv444->data[3 * i] = rgb_to_yuv_y(r_value, g_value, b_value);
+        img_yuv444->data[3 * i + 1] = rgb_to_yuv_u(r_value, g_value, b_value);
+        img_yuv444->data[3 * i + 2] = rgb_to_yuv_v(r_value, g_value, b_value);
+    }
+
+    return img_yuv444;
+}
+
 
 
 
