@@ -1,4 +1,4 @@
-DEBUG ?= 1
+DEBUG ?= 0
 ERROREXIT ?= 1
 PREFIX ?= /usr/local
 
@@ -22,6 +22,11 @@ TEST_OBJECTS = $(patsubst $(TEST_DIR)/%.c, $(BUILD_DIR)/%.o, $(TEST_SOURCES))
 TEST_TARGETS = $(patsubst %.o, %, $(TEST_OBJECTS))
 SOURCE_OBJECTS = $(patsubst $(SOURCE_DIR)/%.c, $(BUILD_DIR)/%.o, $(SOURCES))
 
+TARGET_DYNAMIC_LINUX = $(patsubst %, %.so, $(TARGET))
+TARGET_DYNAMIC_MACOS = $(patsubst %, %.dylib, $(TARGET))
+DLIB_FLAG_LINUX = -shared
+DLIB_FLAG_MACOS = -dynamiclib
+
 
 ifeq ($(DEBUG), 1)
 	CFLAGS += -g -O0
@@ -30,16 +35,21 @@ else
 endif
 
 
-ifeq ($(shell uname -s), Linux)
-	DYNAMIC_LIB_FLAG = -shared
-	TARGET_DYNAMIC = $(patsubst %, %.so, $(TARGET))
+ifeq ($(shell uname -s), Darwin)
+	TARGET_DYNAMIC = $(TARGET_DYNAMIC_MACOS)
 else
-	DYNAMIC_LIB_FLAG = -dynamiclib
-	TARGET_DYNAMIC = $(patsubst %, %.dylib, $(TARGET))
+	TARGET_DYNAMIC = $(TARGET_DYNAMIC_LINUX)
+	
 endif
 
 
 all: build $(TARGET_STATIC) $(TARGET_DYNAMIC) $(TEST_TARGETS)
+
+
+macos: build $(TARGET_DYNAMIC_MACOS) $(TARGET_STATIC)
+
+
+linux: build $(TARGET_DYNAMIC_LINUX) $(TARGET_STATIC)
 
 
 tests: build $(TEST_TARGETS)
@@ -50,14 +60,14 @@ tests: build $(TEST_TARGETS)
 
 
 memchecks: build $(TEST_TARGETS)
-ifeq ($(shell uname -s), Linux)
+ifeq ($(shell uname -s), Darwin)
 	@for test in $(TEST_TARGETS) ; do \
-		valgrind --leak-check=full --error-exitcode=1 $$test || exit $(ERROREXIT); \
+		macgrind . $$test --run-before "make clean" || exit $(ERROREXIT); \
 		echo "" ; \
 	done
 else
 	@for test in $(TEST_TARGETS) ; do \
-		macgrind . $$test --run-before "make clean" || exit $(ERROREXIT); \
+		valgrind --leak-check=full --error-exitcode=1 $$test || exit $(ERROREXIT); \
 		echo "" ; \
 	done
 endif
@@ -73,8 +83,12 @@ $(TARGET_STATIC): $(SOURCE_OBJECTS)
 	$(AR) rcs $@ $^
 
 
-$(TARGET_DYNAMIC): $(SOURCE_OBJECTS)
-	$(CC) $(DYNAMIC_LIB_FLAG) -o $@ $^
+$(TARGET_DYNAMIC_LINUX): $(SOURCE_OBJECTS)
+	$(CC) $(DLIB_FLAG_LINUX) -o $@ $^
+
+
+$(TARGET_DYNAMIC_MACOS): $(SOURCE_OBJECTS)
+	$(CC) $(DLIB_FLAG_MACOS) -o $@ $^
 
 
 $(SOURCE_DIR)/%.c: $(SOURCE_DIR)/%.h
