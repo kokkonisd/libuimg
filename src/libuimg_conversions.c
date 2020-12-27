@@ -1337,6 +1337,45 @@ Image * convert_RGB565_to_RGB8 (Image * img_rgb565)
 }
 
 
+Image * convert_RGB565_to_GRAYSCALE (Image * img_rgb565)
+{
+    Image * img_grayscale = NULL;
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb565) return NULL;
+    if (img_rgb565->format != RGB565) return NULL;
+
+    width = img_rgb565->width;
+    height = img_rgb565->height;
+
+    // Allocate memory for new image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    if (!img_grayscale) return NULL;
+
+    // In GRAYSCALE, each pixel only has a single Y value: Y Y Y Y
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values for base image
+        b_value = img_rgb565->data[2 * i] & 0x1f;
+        g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
+        r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
+
+        // Rescale values
+        r_value = rescale_color(r_value, 0, 32, 0, 255);
+        g_value = rescale_color(g_value, 0, 64, 0, 255);
+        b_value = rescale_color(b_value, 0, 32, 0, 255);
+
+        // Convert values to Y-channel only
+        img_grayscale->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);
+    }
+
+    return img_grayscale;
+}
+
 
 
 
