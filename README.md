@@ -16,6 +16,7 @@ A fast, lightweight image manipulation library for embedded applications.
     - [Installation for bare-metal ARM targets](#installation-for-bare-metal-arm-targets)
  - [How to use libuimg](#how-to-use-libuimg)
  - [Benchmarks](#benchmarks)
+    - [Conversions](#conversions)
  - [Developer notes](#developer-notes)
 
 
@@ -253,7 +254,102 @@ Image_t * yuv420p_image = convert_RGB565_to_YUV420p(rgb565_image);
 
 ## Benchmarks
 
-TODO
+Here are some benchmarks of libuimg, running on an **STM32L452RE** MCU with a clock frequency of **80 MHz** while
+performing operations on a **QQVGA (160x120)** image.
+
+### Conversions
+
+#### YUV444 to * conversions
+
+| Operation                   | Time       |
+| --------------------------- | ---------- |
+| Create YUV444 image         | 5.053 ms   |
+| Convert YUV444 to YUV444p   | 12.496 ms  |
+| Convert YUV444 to YUV420p   | 9.755 ms   |
+| Convert YUV444 to RGB24     | 20.180 ms  |
+| Convert YUV444 to RGB565    | 23.301 ms  |
+| Convert YUV444 to RGB8      | 17.538 ms  |
+| Convert YUV444 to GRAYSCALE | 4.570 ms   |
+
+
+#### YUV444p to * conversions
+
+| Operation                    | Time       |
+| ---------------------------- | ---------- |
+| Create YUV444p image         | 5.051 ms   |
+| Convert YUV444p to YUV444    | 12.014 ms  |
+| Convert YUV444p to YUV420p   | 9.515 ms   |
+| Convert YUV444p to RGB24     | 22.821 ms  |
+| Convert YUV444p to RGB565    | 24.501 ms  |
+| Convert YUV444p to RGB8      | 19.940 ms  |
+| Convert YUV444p to GRAYSCALE | 3.850 ms   |
+
+
+#### YUV420p to * conversions
+
+| Operation                    | Time       |
+| ---------------------------- | ---------- |
+| Create YUV420p image         | 2.530 ms   |
+| Convert YUV420p to YUV444    | 12.275 ms  |
+| Convert YUV420p to YUV444p   | 13.004 ms  |
+| Convert YUV420p to RGB24     | 18.778 ms  |
+| Convert YUV420p to RGB565    | 25.263 ms  |
+| Convert YUV420p to RGB8      | 21.656 ms  |
+| Convert YUV420p to GRAYSCALE | 3.851 ms   |
+
+
+#### RGB24 to * conversions
+
+| Operation                  | Time       |
+| -------------------------- | ---------- |
+| Create RGB24 image         | 5.050 ms   |
+| Convert RGB24 to YUV444    | 16.337 ms  |
+| Convert RGB24 to YUV444p   | 17.057 ms  |
+| Convert RGB24 to YUV420p   | 15.777 ms  |
+| Convert RGB24 to RGB565    | 24.740 ms  |
+| Convert RGB24 to RGB8      | 24.260 ms  |
+| Convert RGB24 to GRAYSCALE | 7.212 ms   |
+
+
+#### RGB565 to * conversions
+
+| Operation                   | Time       |
+| --------------------------- | ---------- |
+| Create RGB565 image         | 3.369 ms   |
+| Convert RGB565 to YUV444    | 25.703 ms  |
+| Convert RGB565 to YUV444p   | 27.864 ms  |
+| Convert RGB565 to YUV420p   | 25.860 ms  |
+| Convert RGB565 to RGB24     | 17.297 ms  |
+| Convert RGB565 to RGB8      | 14.176 ms  |
+| Convert RGB565 to GRAYSCALE | 16.338 ms  |
+
+
+#### RGB8 to * conversions
+
+| Operation                 | Time       |
+| ------------------------- | ---------- |
+| Create RGB8 image         | 1.688 ms   |
+| Convert RGB8 to YUV444    | 24.022 ms  |
+| Convert RGB8 to YUV444p   | 24.261 ms  |
+| Convert RGB8 to YUV420p   | 23.454 ms  |
+| Convert RGB8 to RGB24     | 16.577 ms  |
+| Convert RGB8 to RGB565    | 14.656 ms  |
+| Convert RGB8 to GRAYSCALE | 15.875 ms  |
+
+
+#### GRAYSCALE to * conversions
+_Note: obviously, grayscale to * conversions will not be able to bring back color data that was never there. However,
+they can be practical when interfacing with specific peripherals, for example displays that only accept RGB565 images._
+
+| Operation                    | Time       |
+| ---------------------------- | ---------- |
+| Create GRAYSCALE image       | 1.689 ms   |
+| Convert GRAYSCALE to YUV444  | 9.853 ms   |
+| Convert GRAYSCALE to YUV444p | 9.853 ms   |
+| Convert GRAYSCALE to YUV420p | 4.813 ms   |
+| Convert GRAYSCALE to RGB24   | 14.415 ms  |
+| Convert GRAYSCALE to RGB565  | 27.861 ms  |
+| Convert GRAYSCALE to RGB8    | 26.180 ms  |
 
 
 ## Developer notes
