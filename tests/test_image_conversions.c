@@ -1602,11 +1602,6 @@ char * test_image_conversion_RGB565_to_YUV444 ()
     CUTS_ASSERT(img_yuv444->height == height, "Converted YUV444 image has wrong height");
     CUTS_ASSERT(img_yuv444->format == YUV444, "Converted YUV444 image has wrong format");
 
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 32, 0, 255);
-    g_value = rescale_color(g_value, 0, 64, 0, 255);
-    b_value = rescale_color(b_value, 0, 32, 0, 255);
-
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
     u_value = rgb_to_yuv_u(r_value, g_value, b_value);
@@ -1665,11 +1660,6 @@ char * test_image_conversion_RGB565_to_YUV444p ()
     CUTS_ASSERT(img_yuv444p->width == width, "Converted YUV444p image has wrong width");
     CUTS_ASSERT(img_yuv444p->height == height, "Converted YUV444p image has wrong height");
     CUTS_ASSERT(img_yuv444p->format == YUV444p, "Converted YUV444p image has wrong format");
-
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 32, 0, 255);
-    g_value = rescale_color(g_value, 0, 64, 0, 255);
-    b_value = rescale_color(b_value, 0, 32, 0, 255);
 
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -1732,11 +1722,6 @@ char * test_image_conversion_RGB565_to_YUV420p ()
     CUTS_ASSERT(img_yuv420p->height == height, "Converted YUV420p image has wrong height");
     CUTS_ASSERT(img_yuv420p->format == YUV420p, "Converted YUV420p image has wrong format");
 
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 32, 0, 255);
-    g_value = rescale_color(g_value, 0, 64, 0, 255);
-    b_value = rescale_color(b_value, 0, 32, 0, 255);
-
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
     u_value = rgb_to_yuv_u(r_value, g_value, b_value);
@@ -1797,11 +1782,6 @@ char * test_image_conversion_RGB565_to_RGB24 ()
     CUTS_ASSERT(img_rgb24->width == width, "Converted RGB24 image has wrong width");
     CUTS_ASSERT(img_rgb24->height == height, "Converted RGB24 image has wrong height");
     CUTS_ASSERT(img_rgb24->format == RGB24, "Converted RGB24 image has wrong format");
-
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 32, 0, 255);
-    g_value = rescale_color(g_value, 0, 64, 0, 255);
-    b_value = rescale_color(b_value, 0, 32, 0, 255);
 
 
     for (i = 0; i < width * height * 3; i += 3) {
@@ -1911,11 +1891,6 @@ char * test_image_conversion_RGB565_to_GRAYSCALE ()
     CUTS_ASSERT(img_grayscale->height == height, "Converted GRAYSCALE image has wrong height");
     CUTS_ASSERT(img_grayscale->format == GRAYSCALE, "Converted GRAYSCALE image has wrong format");
 
-    // Downscale values further to 8-bit space
-    r_value = rescale_color(r_value, 0, 32, 0, 255);
-    g_value = rescale_color(g_value, 0, 64, 0, 255);
-    b_value = rescale_color(b_value, 0, 32, 0, 255);
-
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
 
     for (i = 0; i < width * height; i++) {
@@ -1966,11 +1941,6 @@ char * test_image_conversion_RGB8_to_YUV444 ()
     CUTS_ASSERT(img_yuv444->width == width, "Converted YUV444 image has wrong width");
     CUTS_ASSERT(img_yuv444->height == height, "Converted YUV444 image has wrong height");
     CUTS_ASSERT(img_yuv444->format == YUV444, "Converted YUV444 image has wrong format");
-
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 8, 0, 255);
-    g_value = rescale_color(g_value, 0, 8, 0, 255);
-    b_value = rescale_color(b_value, 0, 4, 0, 255);
 
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -2029,11 +1999,6 @@ char * test_image_conversion_RGB8_to_YUV444p ()
     CUTS_ASSERT(img_yuv444p->width == width, "Converted YUV444p image has wrong width");
     CUTS_ASSERT(img_yuv444p->height == height, "Converted YUV444p image has wrong height");
     CUTS_ASSERT(img_yuv444p->format == YUV444p, "Converted YUV444p image has wrong format");
-
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 8, 0, 255);
-    g_value = rescale_color(g_value, 0, 8, 0, 255);
-    b_value = rescale_color(b_value, 0, 4, 0, 255);
 
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -2095,11 +2060,6 @@ char * test_image_conversion_RGB8_to_YUV420p ()
     CUTS_ASSERT(img_yuv420p->height == height, "Converted YUV420p image has wrong height");
     CUTS_ASSERT(img_yuv420p->format == YUV420p, "Converted YUV420p image has wrong format");
 
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 8, 0, 255);
-    g_value = rescale_color(g_value, 0, 8, 0, 255);
-    b_value = rescale_color(b_value, 0, 4, 0, 255);
-
     // Calculate expected values
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
     u_value = rgb_to_yuv_u(r_value, g_value, b_value);
@@ -2160,11 +2120,6 @@ char * test_image_conversion_RGB8_to_RGB24 ()
     CUTS_ASSERT(img_rgb24->height == height, "Converted RGB24 image has wrong height");
     CUTS_ASSERT(img_rgb24->format == RGB24, "Converted RGB24 image has wrong format");
 
-    // Upscale original values
-    r_value = rescale_color(r_value, 0, 8, 0, 255);
-    g_value = rescale_color(g_value, 0, 8, 0, 255);
-    b_value = rescale_color(b_value, 0, 4, 0, 255);
-
 
     for (i = 0; i < width * height * 3; i += 3) {
         // Check Y channel
@@ -2219,11 +2174,6 @@ char * test_image_conversion_RGB8_to_RGB565 ()
     CUTS_ASSERT(img_rgb565->height == height, "Converted RGB565 image has wrong height");
     CUTS_ASSERT(img_rgb565->format == RGB565, "Converted RGB565 image has wrong format");
 
-    // Upscale the values to the 565 16-bit range
-    r_value = rescale_color(r_value, 0, 8, 0, 32);
-    g_value = rescale_color(g_value, 0, 8, 0, 64);
-    b_value = rescale_color(b_value, 0, 4, 0, 32);
-
     for (i = 0; i < width * height; i++) {
         // Get actual R, G, B
         actual_b = img_rgb565->data[i * 2] & 0x1f;
@@ -2276,11 +2226,6 @@ char * test_image_conversion_RGB8_to_GRAYSCALE ()
     CUTS_ASSERT(img_grayscale->width == width, "Converted GRAYSCALE image has wrong width");
     CUTS_ASSERT(img_grayscale->height == height, "Converted GRAYSCALE image has wrong height");
     CUTS_ASSERT(img_grayscale->format == GRAYSCALE, "Converted GRAYSCALE image has wrong format");
-
-    // Downscale values further to 8-bit space
-    r_value = rescale_color(r_value, 0, 8, 0, 255);
-    g_value = rescale_color(g_value, 0, 8, 0, 255);
-    b_value = rescale_color(b_value, 0, 4, 0, 255);
 
     y_value = rgb_to_yuv_y(r_value, g_value, b_value);
 

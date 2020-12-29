@@ -1139,11 +1139,6 @@ Image_t * convert_RGB565_to_YUV444 (Image_t * img_rgb565)
         g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
         r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
 
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 32, 0, 255);
-        g_value = rescale_color(g_value, 0, 64, 0, 255);
-        b_value = rescale_color(b_value, 0, 32, 0, 255);
-
         // Transform RGB -> YUV and apply YUV values to new image
         img_yuv444->data[3 * i] = rgb_to_yuv_y(r_value, g_value, b_value);
         img_yuv444->data[3 * i + 1] = rgb_to_yuv_u(r_value, g_value, b_value);
@@ -1181,11 +1176,6 @@ Image_t * convert_RGB565_to_YUV444p (Image_t * img_rgb565)
         b_value = img_rgb565->data[2 * i] & 0x1f;
         g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
         r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
-
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 32, 0, 255);
-        g_value = rescale_color(g_value, 0, 64, 0, 255);
-        b_value = rescale_color(b_value, 0, 32, 0, 255);
 
         // Transform RGB -> YUV and apply YUV values to new image
         img_yuv444p->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -1233,11 +1223,6 @@ Image_t * convert_RGB565_to_YUV420p (Image_t * img_rgb565)
                       ((img_rgb565->data[i * 2 * width + j * 2 + 1] & 0x07) << 3);
             r_value = (img_rgb565->data[i * 2 * width + j * 2 + 1] & 0xf8) >> 3;
 
-            // Rescale values
-            r_value = rescale_color(r_value, 0, 32, 0, 255);
-            g_value = rescale_color(g_value, 0, 64, 0, 255);
-            b_value = rescale_color(b_value, 0, 32, 0, 255);
-
             // Transform RGB -> YUV and apply YUV values to new image
             img_yuv420p->data[i * width + j] = rgb_to_yuv_y(r_value, g_value, b_value);
             img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = rgb_to_yuv_u(r_value,
@@ -1280,11 +1265,6 @@ Image_t * convert_RGB565_to_RGB24 (Image_t * img_rgb565)
         b_value = img_rgb565->data[2 * i] & 0x1f;
         g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
         r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
-
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 32, 0, 255);
-        g_value = rescale_color(g_value, 0, 64, 0, 255);
-        b_value = rescale_color(b_value, 0, 32, 0, 255);
 
         // Apply scaled values to new image
         img_rgb24->data[3 * i] = r_value;
@@ -1364,11 +1344,6 @@ Image_t * convert_RGB565_to_GRAYSCALE (Image_t * img_rgb565)
         g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
         r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
 
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 32, 0, 255);
-        g_value = rescale_color(g_value, 0, 64, 0, 255);
-        b_value = rescale_color(b_value, 0, 32, 0, 255);
-
         // Convert values to Y-channel only
         img_grayscale->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);
     }
@@ -1403,11 +1378,6 @@ Image_t * convert_RGB8_to_YUV444 (Image_t * img_rgb8)
         b_value = img_rgb8->data[i] & 0x03;
         g_value = (img_rgb8->data[i] >> 2) & 0x07;
         r_value = (img_rgb8->data[i] >> 5) & 0x07;
-
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 8, 0, 255);
-        g_value = rescale_color(g_value, 0, 8, 0, 255);
-        b_value = rescale_color(b_value, 0, 4, 0, 255);
 
         // Transform RGB -> YUV and apply YUV values to new image
         img_yuv444->data[3 * i] = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -1445,11 +1415,6 @@ Image_t * convert_RGB8_to_YUV444p (Image_t * img_rgb8)
         b_value = img_rgb8->data[i] & 0x03;
         g_value = (img_rgb8->data[i] >> 2) & 0x07;
         r_value = (img_rgb8->data[i] >> 5) & 0x07;
-
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 8, 0, 255);
-        g_value = rescale_color(g_value, 0, 8, 0, 255);
-        b_value = rescale_color(b_value, 0, 4, 0, 255);
 
         // Transform RGB -> YUV and apply YUV values to new image
         img_yuv444p->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);
@@ -1496,11 +1461,6 @@ Image_t * convert_RGB8_to_YUV420p (Image_t * img_rgb8)
             g_value = (img_rgb8->data[i * width + j] >> 2) & 0x07;
             r_value = (img_rgb8->data[i * width + j] >> 5) & 0x07;
 
-            // Rescale values
-            r_value = rescale_color(r_value, 0, 8, 0, 255);
-            g_value = rescale_color(g_value, 0, 8, 0, 255);
-            b_value = rescale_color(b_value, 0, 4, 0, 255);
-
             // Transform RGB -> YUV and apply YUV values to new image
             img_yuv420p->data[i * width + j] = rgb_to_yuv_y(r_value, g_value, b_value);
             img_yuv420p->data[u_offset + (i / 2) * UROUND_UP(width / 2) + (j / 2)] = rgb_to_yuv_u(r_value,
@@ -1544,11 +1504,6 @@ Image_t * convert_RGB8_to_RGB24 (Image_t * img_rgb8)
         g_value = (img_rgb8->data[i] >> 2) & 0x07;
         r_value = (img_rgb8->data[i] >> 5) & 0x07;
 
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 8, 0, 255);
-        g_value = rescale_color(g_value, 0, 8, 0, 255);
-        b_value = rescale_color(b_value, 0, 4, 0, 255);
-
         // Apply scaled values to new image
         img_rgb24->data[3 * i] = r_value;
         img_rgb24->data[3 * i + 1] = g_value;
@@ -1586,11 +1541,6 @@ Image_t * convert_RGB8_to_RGB565 (Image_t * img_rgb8)
         g_value = (img_rgb8->data[i] >> 2) & 0x07;
         r_value = (img_rgb8->data[i] >> 5) & 0x07;
 
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 8, 0, 32);
-        g_value = rescale_color(g_value, 0, 8, 0, 64);
-        b_value = rescale_color(b_value, 0, 4, 0, 32);
-
         // Put values together in new image
         // MSB | 5 bits of R, 6 bits of G, 5 bits of B | LSB
         img_rgb565->data[i * 2] = (b_value & 0x1f) | ((g_value & 0x07) << 5);
@@ -1627,11 +1577,6 @@ Image_t * convert_RGB8_to_GRAYSCALE (Image_t * img_rgb8)
         b_value = img_rgb8->data[i] & 0x03;
         g_value = (img_rgb8->data[i] >> 2) & 0x07;
         r_value = (img_rgb8->data[i] >> 5) & 0x07;
-
-        // Rescale values
-        r_value = rescale_color(r_value, 0, 8, 0, 255);
-        g_value = rescale_color(g_value, 0, 8, 0, 255);
-        b_value = rescale_color(b_value, 0, 4, 0, 255);
 
         // Set Y-channel only
         img_grayscale->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);

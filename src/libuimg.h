@@ -5,7 +5,7 @@
 #include "libuimg_conversions.h"
 
 
-#define LIBUIMG_VERSION 0.0.1
+#define LIBUIMG_VERSION 0.0.1 /**< The current version of libuimg. */
 
 
 #endif

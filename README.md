@@ -36,6 +36,7 @@ Libuimg is currently supported on the following platforms:
 | x86 macOS (Mojave 10.14.16)  | Yes                 |
 | ARM Linux (Raspberry Pi 3B+) | No                  |
 | ARM bare-metal (STM32F103RB) | Yes                 |
+| ARM bare-metal (STM32L452RE) | Yes                 |
 
 
 Libuimg currently supports the following image formats:
@@ -44,13 +45,16 @@ Libuimg currently supports the following image formats:
 | ------------ | ---------------- | ------------------------- | --------------------------- |
 | YUV444       | Packed           | 24                        | Y0U0V0 Y1U1V1 Y2U2V2 Y3U3V3 |
 | YUV444p      | Planar           | 24                        | Y0Y1Y2Y3 U0U1U2U3 V0V1V2V3  |
-| YUV420p      | Planar           | 16                        | Y0Y1Y2Y3 U0 V0              |
+| YUV420p      | Planar           | 12                        | Y0Y1Y2Y3 U0 V0              |
 | RGB24        | Packed           | 24                        | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
 | RGB565       | Packed           | 16 ([MSB] 5R 6G 5B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
 | RGB8         | Packed           | 8  ([MSB] 3R 3G 2B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
 | GRAYSCALE    | Packed           | 8                         | Y0 Y1 Y2 Y3                 |
 
 Libuimg currently supports conversions between any of the supported image formats.
+
+
+---
 
 
 ## How to install libuimg
@@ -222,6 +226,9 @@ following linker flags:
 -specs=nosys.specs -specs=nano.specs -lg -lc -lm -lnosys
 ```
 
+---
+
+
 ## How to use libuimg
 
 In order to get access to every element of `libuimg`'s API, all you need to do is include its main header file:
@@ -250,6 +257,8 @@ Image_t * grayscale_image = convert_RGB24_to_GRAYSCALE(rgb24_image);
 Image_t * yuv420p_image = convert_RGB565_to_YUV420p(rgb565_image);
 // ... etc
 ```
+
+---
 
 
 ## Benchmarks
@@ -316,12 +325,12 @@ performing operations on a **QQVGA (160x120)** image.
 | Operation                   | Time       |
 | --------------------------- | ---------- |
 | Create RGB565 image         | 3.369 ms   |
-| Convert RGB565 to YUV444    | 25.703 ms  |
-| Convert RGB565 to YUV444p   | 27.864 ms  |
-| Convert RGB565 to YUV420p   | 25.860 ms  |
-| Convert RGB565 to RGB24     | 17.297 ms  |
+| Convert RGB565 to YUV444    | 16.818 ms  |
+| Convert RGB565 to YUV444p   | 17.778 ms  |
+| Convert RGB565 to YUV420p   | 16.498 ms  |
+| Convert RGB565 to RGB24     | 11.534 ms  |
 | Convert RGB565 to RGB8      | 14.176 ms  |
-| Convert RGB565 to GRAYSCALE | 16.338 ms  |
+| Convert RGB565 to GRAYSCALE | 7.932 ms   |
 
 
 #### RGB8 to * conversions
@@ -329,12 +338,12 @@ performing operations on a **QQVGA (160x120)** image.
 | Operation                 | Time       |
 | ------------------------- | ---------- |
 | Create RGB8 image         | 1.688 ms   |
-| Convert RGB8 to YUV444    | 24.022 ms  |
-| Convert RGB8 to YUV444p   | 24.261 ms  |
-| Convert RGB8 to YUV420p   | 23.454 ms  |
-| Convert RGB8 to RGB24     | 16.577 ms  |
-| Convert RGB8 to RGB565    | 14.656 ms  |
-| Convert RGB8 to GRAYSCALE | 15.875 ms  |
+| Convert RGB8 to YUV444    | 16.097 ms  |
+| Convert RGB8 to YUV444p   | 17.057 ms  |
+| Convert RGB8 to YUV420p   | 15.532 ms  |
+| Convert RGB8 to RGB24     | 10.574 ms  |
+| Convert RGB8 to RGB565    | 8.653 ms   |
+| Convert RGB8 to GRAYSCALE | 6.732 ms   |
 
 
 #### GRAYSCALE to * conversions
@@ -350,6 +359,9 @@ they can be practical when interfacing with specific peripherals, for example di
 | Convert GRAYSCALE to RGB24   | 14.415 ms  |
 | Convert GRAYSCALE to RGB565  | 27.861 ms  |
 | Convert GRAYSCALE to RGB8    | 26.180 ms  |
+
+
+---
 
 
 ## Developer notes
