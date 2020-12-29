@@ -114,8 +114,8 @@ endif
 # Makefile high-level targets (to be used directly by the user)
 # ---------------------------------------------------------------------------------------------------------------------
 
-# By default, build static & both dynamic (Linux & macOS) libraries for the host
-all: build $(TARGET_STATIC_HOST) $(TARGET_DYNAMIC_HOST_LINUX) $(TARGET_DYNAMIC_HOST_MACOS)
+# By default, only build the static library for the host
+all: build $(TARGET_STATIC_HOST)
 
 
 # Build only the static & macOS dynamic library for the host
