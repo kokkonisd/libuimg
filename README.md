@@ -214,6 +214,13 @@ $ make CROSS_PREFIX=<custom prefix> CROSS_BM_CPU=<target CPU architecture> CROSS
 
 You can then find the static bare-metal library in `build/lib/` and use it on the bare-metal target.
 
+**Important note:** since libuimg uses calls to `malloc`/`free` you need to compile your final MCU code with the
+following linker flags:
+
+```text
+-specs=nosys.specs -specs=nano.specs -lg -lc -lm -lnosys
+```
+
 ## How to use libuimg
 
 In order to get access to every element of `libuimg`'s API, all you need to do is include its main header file:
