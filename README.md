@@ -262,7 +262,11 @@ Conversions are supported to and from any of the currently supported image forma
 For dynamically allocated images, you can use:
 
 ```c
-Image_t * converted_to_rgb24 = convert_dynamic_image(my_yuv444_image, RGB24);
+Image_t * my_yuv444_image = create_image(200, 200, YUV444);
+// ... fill in image ...
+Image_t * converted_to_rgb24 = create_image(200, 200, RGB24);
+uint8_t result = convert_image(my_yuv444_image, converted_to_rgb24);
+if (!result) printf("Error during conversion\n");
 ```
 
 Which will of course allocate memory for the new `converted_to_rgb24` image.
@@ -270,7 +274,17 @@ Which will of course allocate memory for the new `converted_to_rgb24` image.
 If you prefer to manage the memory yourself statically, you can use:
 
 ```c
+// Create static buffers for both images
+static uint8_t yuv444_buf[200 * 200 * 3];
+static uint8_t rgb24_buf[200 * 200 * 3];
+
+// Create both image structures
+Image_t my_yuv444_image = { .width = 200, .height = 200, .format = YUV444, .data = &yuv444_buf };
+Image_t converted_to_rgb24 = { .width = 200, .height = 200, .format = RGB24, .data = &rgb24_buf };
+
+// Convert one format to the other
 uint8_t result = convert_image(my_yuv444_image, converted_to_rgb24);
+if (!result) printf("Error during conversion\n");
 ```
 
 This is of course assuming that you have already allocated some space for the new image and that its `data` pointer is

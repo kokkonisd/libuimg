@@ -87,24 +87,6 @@ uint8_t convert_image (Image_t * base_img, Image_t * converted_img)
 }
 
 
-Image_t * convert_dynamic_image (Image_t * base_img, PixelFormat_t format)
-{
-    Image_t * converted_img = NULL;
-    uint8_t res = 0;
-
-    if (!base_img) return NULL;
-
-    converted_img = create_image(base_img->width, base_img->height, format);
-    res = convert_image(base_img, converted_img);
-
-    if (!res) {
-        destroy_image(converted_img);
-        return NULL;
-    }
-
-    return converted_img;
-}
-
 /* --------------------------------------------------------------------------------------------------------------------
  * LOW-LEVEL CONVERSION FUNCTIONS
  * --------------------------------------------------------------------------------------------------------------------
