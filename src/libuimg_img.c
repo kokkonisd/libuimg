@@ -40,7 +40,10 @@ Image_t * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
 
     // Allocate the calculated size
     new_image->data = calloc(1, sizeof(uint8_t) * data_size);
-    if (!new_image->data) return NULL;
+    if (!new_image->data) {
+        free(new_image);
+        return NULL;
+    }
 
     return new_image;
 }
