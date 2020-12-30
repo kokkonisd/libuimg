@@ -237,26 +237,43 @@ In order to get access to every element of `libuimg`'s API, all you need to do i
 #include "libuimg.h"
 ```
 
-The basic building block of the API is the `Image_t` structure; for example, in order to create a simple RGB24 image
-of dimensions 200x200 (pixels) all you need to do is:
+The basic building block of the API is the `Image_t` structure. It contains the image's width and height (in `uint16_t`
+format) as well as the pixel format of the image, and a pointer to the raw data of the image.
+
+The high-level API allows for both static and dynamic handling of images in terms of how the memory is handled; for
+instance, in bare-metal applications often using something like `malloc` is discouraged, so the user can simply
+statically allocate an image buffer and create the `Image_t` structure "by hand".
 
 ```c
-Image_t * my_image = create_image(200, 200, RGB24);
-
+// Dynamic allocation example
+Image_t * dynamically_allocated_image = create_image(200, 200, RGB24);
 // ... do stuff with image here ...
+destroy_image(dynamically_allocated_image);
 
-destroy_image(my_image);
+// Static allocation example
+uint8_t img_buf[200 * 200];
+Image_t statically_allocated_image = { .width = 200, .height = 200, .format = RGB24, .data = &img_buf };
+// ... do stuff with image ...
 ```
 
-Conversions are supported to and from any of the currently supported image formats, like so:
+Conversions are supported to and from any of the currently supported image formats.
+
+For dynamically allocated images, you can use:
 
 ```c
-// Conversion functions look like `convert_<base_format>_to_<new_format>()`
-Image_t * yuv444p_image = convert_YUV444_to_YUV444p(yuv444_image);
-Image_t * grayscale_image = convert_RGB24_to_GRAYSCALE(rgb24_image);
-Image_t * yuv420p_image = convert_RGB565_to_YUV420p(rgb565_image);
-// ... etc
+Image_t * converted_to_rgb24 = convert_dynamic_image(my_yuv444_image, RGB24);
 ```
+
+Which will of course allocate memory for the new `converted_to_rgb24` image.
+
+If you prefer to manage the memory yourself statically, you can use:
+
+```c
+uint8_t result = convert_image(my_yuv444_image, converted_to_rgb24);
+```
+
+This is of course assuming that you have already allocated some space for the new image and that its `data` pointer is
+pointing to it.
 
 ---
 

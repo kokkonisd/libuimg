@@ -24,6 +24,8 @@ uint8_t convert_image (Image_t * base_img, Image_t * converted_img);
 /**
  * @brief      Convert a base image to a different format.
  *
+ * The conversion is dynamic, meaning that memory will be dynamically allocated for the converted image.
+ *
  * @param      base_img  The base image to be converted.
  * @param[in]  format    The format to convert to.
  *
