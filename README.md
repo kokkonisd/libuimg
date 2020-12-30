@@ -251,7 +251,8 @@ Image_t * dynamically_allocated_image = create_image(200, 200, RGB24);
 destroy_image(dynamically_allocated_image);
 
 // Static allocation example
-uint8_t img_buf[200 * 200];
+// RGB24 is 24bpp, or 3 bytes-per-pixel, so we need to allocate `width * height * 3` bytes
+uint8_t img_buf[200 * 200 * 3];
 Image_t statically_allocated_image = { .width = 200, .height = 200, .format = RGB24, .data = &img_buf };
 // ... do stuff with image ...
 ```
