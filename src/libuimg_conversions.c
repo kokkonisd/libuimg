@@ -105,6 +105,10 @@ Image_t * convert_dynamic_image (Image_t * base_img, PixelFormat_t format)
     return converted_img;
 }
 
+/* --------------------------------------------------------------------------------------------------------------------
+ * LOW-LEVEL CONVERSION FUNCTIONS
+ * --------------------------------------------------------------------------------------------------------------------
+ */
 
 uint8_t convert_YUV444_to_YUV444p (Image_t * img_yuv444, Image_t * img_yuv444p)
 {
@@ -199,19 +203,19 @@ uint8_t convert_YUV444_to_RGB24 (Image_t * img_yuv444, Image_t * img_rgb24)
     // Base image: YUV YUV YUV YUV
     // New image: RGB RGB RGB RGB
 
-    for (i = 0; i < width * height; i++) {
+    for (i = 0; i < width * height * 3; i += 3) {
         // Copy Y -> R component
-        img_rgb24->data[i * 3] = yuv_to_rgb_r(img_yuv444->data[i * 3],
-                                              img_yuv444->data[i * 3 + 1],
-                                              img_yuv444->data[i * 3 + 2]);
+        img_rgb24->data[i] = yuv_to_rgb_r(img_yuv444->data[i],
+                                          img_yuv444->data[i + 1],
+                                          img_yuv444->data[i + 2]);
         // Copy U -> G component
-        img_rgb24->data[i * 3 + 1] = yuv_to_rgb_g(img_yuv444->data[i * 3],
-                                              img_yuv444->data[i * 3 + 1],
-                                              img_yuv444->data[i * 3 + 2]);
+        img_rgb24->data[i + 1] = yuv_to_rgb_g(img_yuv444->data[i],
+                                              img_yuv444->data[i + 1],
+                                              img_yuv444->data[i + 2]);
         // Copy V -> B component
-        img_rgb24->data[i * 3 + 2] = yuv_to_rgb_b(img_yuv444->data[i * 3],
-                                              img_yuv444->data[i * 3 + 1],
-                                              img_yuv444->data[i * 3 + 2]);
+        img_rgb24->data[i + 2] = yuv_to_rgb_b(img_yuv444->data[i],
+                                              img_yuv444->data[i + 1],
+                                              img_yuv444->data[i + 2]);
     }
 
     return 1;
@@ -557,7 +561,6 @@ uint8_t convert_YUV444p_to_RGB8 (Image_t * img_yuv444p, Image_t * img_rgb8)
 
 uint8_t convert_YUV444p_to_GRAYSCALE (Image_t * img_yuv444p, Image_t * img_grayscale)
 {
-    uint32_t i = 0;
     uint16_t width = 0;
     uint16_t height = 0;
 
@@ -574,10 +577,8 @@ uint8_t convert_YUV444p_to_GRAYSCALE (Image_t * img_yuv444p, Image_t * img_grays
     // Base image: YYYYY UUUU VVVV
     // New image: Y Y Y Y
 
-    for (i = 0; i < width * height; i++) {
-        // Copy Y component
-        img_grayscale->data[i] = img_yuv444p->data[i];
-    }
+    // Copy Y component
+    memcpy(img_grayscale->data, img_yuv444p->data, width * height);
 
     return 1;
 }
@@ -1657,12 +1658,13 @@ uint8_t convert_GRAYSCALE_to_YUV444 (Image_t * img_grayscale, Image_t * img_yuv4
     // Base image: YYYY
     // New image: YUV YUV YUV YUV
     // Since there is no U, V information in the base image, they will be set to 0
+
     for (i = 0; i < width * height; i++) {
         // Copy Y component
         img_yuv444->data[i * 3] = img_grayscale->data[i];
         // Set U component to be all zeroes, since there is no U data in the base image
         img_yuv444->data[i * 3 + 1] = 0;
-        // Set V component to be all zeroes, since there is no U data in the base image
+        // Set V component to be all zeroes, since there is no V data in the base image
         img_yuv444->data[i * 3 + 2] = 0;
     }
 
@@ -1693,7 +1695,7 @@ uint8_t convert_GRAYSCALE_to_YUV444p (Image_t * img_grayscale, Image_t * img_yuv
     memcpy(img_yuv444p->data, img_grayscale->data, width * height);
     // Set U component to be all zeroes, since there is no U data in the base image
     memset(&img_yuv444p->data[width * height], 0, width * height);
-    // Set V component to be all zeroes, since there is no U data in the base image
+    // Set V component to be all zeroes, since there is no V data in the base image
     memset(&img_yuv444p->data[width * height * 2], 0, width * height);
 
     return 1;
@@ -1723,7 +1725,7 @@ uint8_t convert_GRAYSCALE_to_YUV420p (Image_t * img_grayscale, Image_t * img_yuv
     memcpy(img_yuv420p->data, img_grayscale->data, width * height);
     // Set U component to be all zeroes, since there is no U data in the base image
     memset(&img_yuv420p->data[width * height], 0, UROUND_UP(width / 2) * UROUND_UP(height / 2));
-    // Set V component to be all zeroes, since there is no U data in the base image
+    // Set V component to be all zeroes, since there is no V data in the base image
     memset(&img_yuv420p->data[width * height + UROUND_UP(width / 2) * UROUND_UP(height / 2)],
            0,
            UROUND_UP(width / 2) * UROUND_UP(height / 2));
@@ -1827,6 +1829,7 @@ uint8_t convert_GRAYSCALE_to_RGB8 (Image_t * img_grayscale, Image_t * img_rgb8)
 
     // In RGB8, each pixel has 3 bits for R, 3 bits for G and 2 bits for B
     // Since there is no U, V information in the base image, they will be set to 0
+
     for (i = 0; i < width * height; i++) {
         // Transform YUV -> RGB
         r_value = yuv_to_rgb_r(img_grayscale->data[i], 0, 0);
@@ -1845,6 +1848,12 @@ uint8_t convert_GRAYSCALE_to_RGB8 (Image_t * img_grayscale, Image_t * img_rgb8)
 
     return 1;
 }
+
+
+/* --------------------------------------------------------------------------------------------------------------------
+ * COLOR TRANSFORMATION FUNCTIONS
+ * --------------------------------------------------------------------------------------------------------------------
+ */
 
 
 uint8_t rescale_color (uint8_t value, uint8_t old_min, uint8_t old_max, uint8_t new_min, uint8_t new_max)
