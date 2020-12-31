@@ -136,6 +136,25 @@ char * test_GRAYSCALE_image_creation ()
 }
 
 
+char * test_ASCII_image_creation ()
+{
+    uint16_t width = 250;
+    uint16_t height = 250;
+
+    Image_t * img = create_image(width, height, ASCII);
+    CUTS_ASSERT(img, "ASCII image creation failed");
+
+    CUTS_ASSERT(img->width == width, "ASCII image has wrong width");
+    CUTS_ASSERT(img->height == height, "ASCII image has wrong height");
+    CUTS_ASSERT(img->format == ASCII, "ASCII image has wrong format");
+    CUTS_ASSERT(img->data, "ASCII image has invalid data");
+
+    destroy_image(img);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -147,6 +166,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_RGB565_image_creation);
     CUTS_RUN_TEST(test_RGB8_image_creation);
     CUTS_RUN_TEST(test_GRAYSCALE_image_creation);
+    CUTS_RUN_TEST(test_ASCII_image_creation);
 
     return NULL;
 }

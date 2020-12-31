@@ -56,7 +56,7 @@ char * test_failed_conversion_by_uninitialized_images ()
 
     conv_img = create_image(1, 1, RGB565);
 
-    // Attempt to convert with the first image being uninitialized    
+    // Attempt to convert with the first image being uninitialized
     res = convert_image(base_img, conv_img);
     CUTS_ASSERT(res == 0, "Conversion should fail when the first image is uninitialized");
 

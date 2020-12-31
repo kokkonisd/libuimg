@@ -38,7 +38,8 @@ typedef enum {
     RGB24,
     RGB565,
     RGB8,
-    GRAYSCALE
+    GRAYSCALE,
+    ASCII
 } PixelFormat_t;
 
 

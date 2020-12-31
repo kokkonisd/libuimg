@@ -234,7 +234,7 @@ $(BUILD_DIR)/test_%.o: $(TEST_DIR)/test_%.c
 
 
 # Build test binaries (for host only)
-$(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(TARGET_STATIC_HOST)
+$(BUILD_DIR)/test_%: $(BUILD_DIR)/test_%.o $(TARGET_STATIC_HOST) $(SOURCE_OBJECTS_HOST)
 	$(HOST_CC) $(CFLAGS) $(INCLUDES) -L$(BUILD_DIR)/lib -Wl,-rpath,$(BUILD_DIR)/lib $< -o $@ -luimg
 
 

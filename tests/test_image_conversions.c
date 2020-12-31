@@ -318,6 +318,61 @@ char * test_image_conversion_YUV444_to_GRAYSCALE ()
 }
 
 
+char * test_image_conversion_YUV444_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_yuv444 = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+
+    // Create YUV444 image
+    img_yuv444 = create_image(width, height, YUV444);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Set Y values
+            img_yuv444->data[i * 3 * width + j * 3] = curr_value;
+            img_yuv444->data[i * 3 * width + j * 3 + 1] = 'U';
+            img_yuv444->data[i * 3 * width + j * 3 + 2] = 'V';
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_yuv444, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(curr_value),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_yuv444);
+    destroy_image(img_ascii);
+
+    return NULL;
+}
+
+
 char * test_image_conversion_YUV444p_to_YUV444 ()
 {
     uint32_t i = 0;
@@ -624,6 +679,61 @@ char * test_image_conversion_YUV444p_to_GRAYSCALE ()
 
     destroy_image(img_yuv444p);
     destroy_image(img_grayscale);
+
+    return NULL;
+}
+
+
+char * test_image_conversion_YUV444p_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_yuv444p = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+
+    // Create YUV444p image
+    img_yuv444p = create_image(width, height, YUV444p);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Set Y values
+            img_yuv444p->data[i * width + j] = curr_value;
+            img_yuv444p->data[width * height + i * width + j] = 'U';
+            img_yuv444p->data[width * height * 2 + i * width + j] = 'V';
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_yuv444p, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(curr_value),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_yuv444p);
+    destroy_image(img_ascii);
 
     return NULL;
 }
@@ -957,6 +1067,64 @@ char * test_image_conversion_YUV420p_to_GRAYSCALE ()
 
     destroy_image(img_yuv420p);
     destroy_image(img_grayscale);
+
+    return NULL;
+}
+
+
+char * test_image_conversion_YUV420p_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_yuv420p = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+
+    // Create YUV444 image
+    img_yuv420p = create_image(width, height, YUV420p);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Set Y values
+            img_yuv420p->data[i * width + j] = curr_value;
+            img_yuv420p->data[width * height + (i / 2)  * UROUND_UP(width / 2) + (j / 2)] = 'U';
+            img_yuv420p->data[width * height +
+                              UROUND_UP(width / 2) * UROUND_UP(height / 2) +
+                              (i / 2) * UROUND_UP(width / 2) + 
+                              (j / 2)] = 'V';
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_yuv420p, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(curr_value),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_yuv420p);
+    destroy_image(img_ascii);
 
     return NULL;
 }
@@ -1306,6 +1474,61 @@ char * test_image_conversion_RGB24_to_GRAYSCALE ()
 
     destroy_image(img_rgb24);
     destroy_image(img_grayscale);
+
+    return NULL;
+}
+
+
+char * test_image_conversion_RGB24_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_rgb24 = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+
+    // Create RGB24 image
+    img_rgb24 = create_image(width, height, RGB24);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Set RGB values
+            img_rgb24->data[i * 3 * width + j * 3] = curr_value;
+            img_rgb24->data[i * 3 * width + j * 3 + 1] = curr_value;
+            img_rgb24->data[i * 3 * width + j * 3 + 2] = curr_value;
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_rgb24, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(rgb_to_yuv_y(curr_value, curr_value, curr_value)),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_rgb24);
+    destroy_image(img_ascii);
 
     return NULL;
 }
@@ -1676,6 +1899,74 @@ char * test_image_conversion_RGB565_to_GRAYSCALE ()
 }
 
 
+char * test_image_conversion_RGB565_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_rgb565 = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    // Create RGΒ565 image
+    img_rgb565 = create_image(width, height, RGB565);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        // Downscale original values
+        r_value = rescale_color(curr_value, 0, 255, 0, 32);
+        g_value = rescale_color(curr_value, 0, 255, 0, 64);
+        b_value = rescale_color(curr_value, 0, 255, 0, 32);
+
+        for (j = 0; j < width; j++) {
+            // MSB | 5 bits of R, 6 bits of G, 5 bits of B | LSB
+            img_rgb565->data[i * 2 * width + j * 2] = (b_value & 0x1f) | ((g_value & 0x07) << 5);
+            img_rgb565->data[i * 2 * width + j * 2 + 1] = ((g_value & 0x38) >> 3) | ((r_value & 0x1f) << 3);
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_rgb565, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        // Downscale original values
+        r_value = rescale_color(curr_value, 0, 255, 0, 32);
+        g_value = rescale_color(curr_value, 0, 255, 0, 64);
+        b_value = rescale_color(curr_value, 0, 255, 0, 32);
+
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(rgb_to_yuv_y(r_value, g_value, b_value)),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_rgb565);
+    destroy_image(img_ascii);
+
+    return NULL;
+}
+
+
 char * test_image_conversion_RGB8_to_YUV444 ()
 {
     uint32_t i = 0;
@@ -2035,6 +2326,74 @@ char * test_image_conversion_RGB8_to_GRAYSCALE ()
     return NULL;
 }
 
+
+char * test_image_conversion_RGB8_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_rgb8 = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    // Create RGΒ8 image
+    img_rgb8 = create_image(width, height, RGB8);
+
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        // Downscale original values
+        r_value = rescale_color(curr_value, 0, 255, 0, 32);
+        g_value = rescale_color(curr_value, 0, 255, 0, 64);
+        b_value = rescale_color(curr_value, 0, 255, 0, 32);
+
+        for (j = 0; j < width; j++) {
+            // MSB | 3 bits of R, 3 bits of G, 2 bits of B | LSB
+            img_rgb8->data[i] = (b_value & 0x03) | ((g_value & 0x07) << 2) | ((r_value & 0x07) << 5);
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_rgb8, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        // Downscale original values
+        r_value = rescale_color(curr_value, 0, 255, 0, 8);
+        g_value = rescale_color(curr_value, 0, 255, 0, 8);
+        b_value = rescale_color(curr_value, 0, 255, 0, 4);
+
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(rgb_to_yuv_y(r_value, g_value, b_value)),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_rgb8);
+    destroy_image(img_ascii);
+
+    return NULL;
+}
+
+
 char * test_image_conversion_GRAYSCALE_to_YUV444 ()
 {
     uint32_t i = 0;
@@ -2339,6 +2698,59 @@ char * test_image_conversion_GRAYSCALE_to_RGB8 ()
 }
 
 
+char * test_image_conversion_GRAYSCALE_to_ASCII ()
+{
+    uint32_t i = 0;
+    uint32_t j = 0;
+    uint16_t width = TEST_WIDTH;
+    uint16_t height = TEST_HEIGHT;
+    uint8_t res = 0;
+    Image_t * img_grayscale = NULL;
+    Image_t * img_ascii = NULL;
+    uint8_t curr_value = 0;
+
+    // Create GRAYSCALE image
+    img_grayscale = create_image(width, height, GRAYSCALE);
+    // Set image pixels to the appropriate values
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Set Y values
+            img_grayscale->data[i * width + j] = curr_value;
+        }
+
+        curr_value += 22;
+    }
+
+    // Create converted ASCII image
+    img_ascii = create_image(width, height, ASCII);
+    // Convert image
+    res = convert_image(img_grayscale, img_ascii);
+
+    // Check that the converted image is okay
+    CUTS_ASSERT(img_ascii, "Converted ASCII image couldn't be created");
+    CUTS_ASSERT(img_ascii->width == width, "Converted ASCII image has wrong width");
+    CUTS_ASSERT(img_ascii->height == height, "Converted ASCII image has wrong height");
+    CUTS_ASSERT(img_ascii->format == ASCII, "Converted ASCII image has wrong format");
+    CUTS_ASSERT(res == 1, "Conversion failed");
+
+    curr_value = 0;
+    for (i = 0; i < height; i++) {
+        for (j = 0; j < width; j++) {
+            // Check Y channel
+            CUTS_ASSERT(img_ascii->data[i * width + j] == y_to_ascii(curr_value),
+                        "Wrong Y value for ASCII image on pixel %d", i * width + j);
+        }
+
+        curr_value += 22;
+    }
+
+    destroy_image(img_grayscale);
+    destroy_image(img_ascii);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -2349,6 +2761,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_YUV444_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_YUV444_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_YUV444_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_YUV444_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_YUV420p);
@@ -2356,6 +2769,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_YUV444p_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_YUV444p_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_YUV444p);
@@ -2363,6 +2777,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_YUV420p_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_YUV420p_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_YUV444p);
@@ -2370,6 +2785,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_RGB24_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_RGB24_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_YUV444p);
@@ -2377,6 +2793,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_RGB24);
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_RGB8);
     CUTS_RUN_TEST(test_image_conversion_RGB565_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_RGB565_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_YUV444p);
@@ -2384,6 +2801,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_RGB24);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_RGB8_to_GRAYSCALE);
+    CUTS_RUN_TEST(test_image_conversion_RGB8_to_ASCII);
 
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_YUV444);
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_YUV444p);
@@ -2391,6 +2809,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_RGB24);
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_RGB565);
     CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_RGB8);
+    CUTS_RUN_TEST(test_image_conversion_GRAYSCALE_to_ASCII);
 
     return NULL;
 }

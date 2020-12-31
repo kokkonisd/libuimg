@@ -8,8 +8,11 @@
  * This LUT allows easy access to the right conversion function given two image formats.
  * For example, `conversion_function_LUT[YUV444p][YUV420p](img1, img2)` would turn into
  * `convert_YUV444p_to_YUV420p(img1, img2)`.
+ * 
+ * The only particularity of this LUT is that it is not square; this is because the ASCII format should be used only
+ * for debugging, and thus it is useless to convert something back from ASCII to some other format.
  */
-uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img1, Image_t * img2) = {
+uint8_t (* conversion_function_LUT[ASCII][ASCII + 1]) (Image_t * img1, Image_t * img2) = {
     {
         NULL,
         convert_YUV444_to_YUV444p,
@@ -17,7 +20,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_YUV444_to_RGB24,
         convert_YUV444_to_RGB565,
         convert_YUV444_to_RGB8,
-        convert_YUV444_to_GRAYSCALE
+        convert_YUV444_to_GRAYSCALE,
+        convert_YUV444_to_ASCII
     },
     {
         convert_YUV444p_to_YUV444,
@@ -26,7 +30,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_YUV444p_to_RGB24,
         convert_YUV444p_to_RGB565,
         convert_YUV444p_to_RGB8,
-        convert_YUV444p_to_GRAYSCALE
+        convert_YUV444p_to_GRAYSCALE,
+        convert_YUV444p_to_ASCII
     },
     {
         convert_YUV420p_to_YUV444,
@@ -35,7 +40,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_YUV420p_to_RGB24,
         convert_YUV420p_to_RGB565,
         convert_YUV420p_to_RGB8,
-        convert_YUV420p_to_GRAYSCALE
+        convert_YUV420p_to_GRAYSCALE,
+        convert_YUV420p_to_ASCII
     },
     {
         convert_RGB24_to_YUV444,
@@ -44,7 +50,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         NULL,
         convert_RGB24_to_RGB565,
         convert_RGB24_to_RGB8,
-        convert_RGB24_to_GRAYSCALE
+        convert_RGB24_to_GRAYSCALE,
+        convert_RGB24_to_ASCII
     },
     {
         convert_RGB565_to_YUV444,
@@ -53,7 +60,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_RGB565_to_RGB24,
         NULL,
         convert_RGB565_to_RGB8,
-        convert_RGB565_to_GRAYSCALE
+        convert_RGB565_to_GRAYSCALE,
+        convert_RGB565_to_ASCII
     },
     {
         convert_RGB8_to_YUV444,
@@ -62,7 +70,8 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_RGB8_to_RGB24,
         convert_RGB8_to_RGB565,
         NULL,
-        convert_RGB8_to_GRAYSCALE
+        convert_RGB8_to_GRAYSCALE,
+        convert_RGB8_to_ASCII
     },
     {
         convert_GRAYSCALE_to_YUV444,
@@ -71,17 +80,23 @@ uint8_t (* conversion_function_LUT[GRAYSCALE + 1][GRAYSCALE + 1]) (Image_t * img
         convert_GRAYSCALE_to_RGB24,
         convert_GRAYSCALE_to_RGB565,
         convert_GRAYSCALE_to_RGB8,
-        NULL
+        NULL,
+        convert_GRAYSCALE_to_ASCII
     }
 };
 
 
 uint8_t convert_image (Image_t * base_img, Image_t * converted_img)
 {
+    // Check image pointers
     if (!base_img) return 0;
     if (!converted_img) return 0;
+    // Verify that both images have the same dimensions
     if (base_img->width != converted_img->width || base_img->height != converted_img->height) return 0;
+    // Do nothing if the format does not change
     if (base_img->format == converted_img->format) return 1;
+    // Conversions from ASCII are forbidden
+    if (base_img->format == ASCII) return 0;
 
     return conversion_function_LUT[base_img->format][converted_img->format](base_img, converted_img);
 }
@@ -329,6 +344,34 @@ uint8_t convert_YUV444_to_GRAYSCALE (Image_t * img_yuv444, Image_t * img_graysca
 }
 
 
+uint8_t convert_YUV444_to_ASCII (Image_t * img_yuv444, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444) return 0;
+    if (img_yuv444->format != YUV444) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_yuv444->width != img_ascii->width || img_yuv444->height != img_ascii->height) return 0;
+
+    width = img_yuv444->width;
+    height = img_yuv444->height;
+
+    // In ASCII, each pixel has one Y value
+    // Base image: YUV YUV YUV YUV
+    // New image: Y Y Y Y
+
+    for (i = 0; i < width * height; i++) {
+        // Copy Y component
+        img_ascii->data[i] = y_to_ascii(img_yuv444->data[i * 3]);
+    }
+
+    return 1;
+}
+
+
 uint8_t convert_YUV444p_to_YUV444 (Image_t * img_yuv444p, Image_t * img_yuv444)
 {
     uint32_t i = 0;
@@ -564,6 +607,35 @@ uint8_t convert_YUV444p_to_GRAYSCALE (Image_t * img_yuv444p, Image_t * img_grays
 
     return 1;
 }
+
+
+uint8_t convert_YUV444p_to_ASCII (Image_t * img_yuv444p, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv444p) return 0;
+    if (img_yuv444p->format != YUV444p) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_yuv444p->width != img_ascii->width || img_yuv444p->height != img_ascii->height) return 0;
+
+    width = img_yuv444p->width;
+    height = img_yuv444p->height;
+
+    // In ASCII, each pixel has one Y value
+    // Base image: YYYYY UUUU VVVV
+    // New image: Y Y Y Y
+
+    // Copy Y component
+    for (i = 0; i < width * height; i++) {
+        img_ascii->data[i] = y_to_ascii(img_yuv444p->data[i]);
+    }
+
+    return 1;
+}
+
 
 
 uint8_t convert_YUV420p_to_YUV444 (Image_t * img_yuv420p, Image_t * img_yuv444)
@@ -927,6 +999,34 @@ uint8_t convert_YUV420p_to_GRAYSCALE (Image_t * img_yuv420p, Image_t * img_grays
 }
 
 
+uint8_t convert_YUV420p_to_ASCII (Image_t * img_yuv420p, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_yuv420p) return 0;
+    if (img_yuv420p->format != YUV420p) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_yuv420p->width != img_ascii->width || img_yuv420p->height != img_ascii->height) return 0;
+
+    width = img_yuv420p->width;
+    height = img_yuv420p->height;
+
+    // In ASCII, each pixel has one Y value
+    // Base image: YYYYY U V
+    // New image: Y Y Y Y
+    
+    // Copy Y component
+    for (i = 0; i < width * height; i++) {
+        img_ascii->data[i] = y_to_ascii(img_yuv420p->data[i]);
+    }
+
+    return 1;
+}
+
+
 uint8_t convert_RGB24_to_YUV444 (Image_t * img_rgb24, Image_t * img_yuv444)
 {
     uint32_t i = 0;
@@ -1164,6 +1264,38 @@ uint8_t convert_RGB24_to_GRAYSCALE (Image_t * img_rgb24, Image_t * img_grayscale
 }
 
 
+uint8_t convert_RGB24_to_ASCII (Image_t * img_rgb24, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t y_value = 0;
+
+    if (!img_rgb24) return 0;
+    if (img_rgb24->format != RGB24) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_rgb24->width != img_ascii->width || img_rgb24->height != img_ascii->height) return 0;
+
+    width = img_rgb24->width;
+    height = img_rgb24->height;
+
+    // In ASCII, each pixel has one Y value
+    // Base image: RGB RGB RGB RGB
+    // New image: YYYY
+
+    for (i = 0; i < width * height; i++) {
+        // Transform RGB -> Y
+        y_value = rgb_to_yuv_y(img_rgb24->data[i * 3], img_rgb24->data[i * 3 + 1], img_rgb24->data[i * 3 + 2]);
+
+        // Copy Y component
+        img_ascii->data[i] = y_to_ascii(y_value);
+    }
+
+    return 1;
+}
+
+
 uint8_t convert_RGB565_to_YUV444 (Image_t * img_rgb565, Image_t * img_yuv444)
 {
     uint32_t i = 0;
@@ -1389,6 +1521,40 @@ uint8_t convert_RGB565_to_GRAYSCALE (Image_t * img_rgb565, Image_t * img_graysca
 
         // Convert values to Y-channel only
         img_grayscale->data[i] = rgb_to_yuv_y(r_value, g_value, b_value);
+    }
+
+    return 1;
+}
+
+
+uint8_t convert_RGB565_to_ASCII (Image_t * img_rgb565, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb565) return 0;
+    if (img_rgb565->format != RGB565) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_rgb565->width != img_ascii->width || img_rgb565->height != img_ascii->height) return 0;
+
+    width = img_rgb565->width;
+    height = img_rgb565->height;
+
+    // In ASCII, each pixel only has a single Y value: Y Y Y Y
+
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values for base image
+        b_value = img_rgb565->data[2 * i] & 0x1f;
+        g_value = ((img_rgb565->data[2 * i] & 0xe0) >> 5) | ((img_rgb565->data[2 * i + 1] & 0x07) << 3);
+        r_value = (img_rgb565->data[2 * i + 1] & 0xf8) >> 3;
+
+        // Convert values to Y-channel only
+        img_ascii->data[i] = y_to_ascii(rgb_to_yuv_y(r_value, g_value, b_value));
     }
 
     return 1;
@@ -1621,6 +1787,40 @@ uint8_t convert_RGB8_to_GRAYSCALE (Image_t * img_rgb8, Image_t * img_grayscale)
 }
 
 
+uint8_t convert_RGB8_to_ASCII (Image_t * img_rgb8, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+    uint8_t r_value = 0;
+    uint8_t g_value = 0;
+    uint8_t b_value = 0;
+
+    if (!img_rgb8) return 0;
+    if (img_rgb8->format != RGB8) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_rgb8->width != img_ascii->width || img_rgb8->height != img_ascii->height) return 0;
+
+    width = img_rgb8->width;
+    height = img_rgb8->height;
+
+    // In ASCII, each pixel only has one Y value: Y Y Y Y
+
+    for (i = 0; i < width * height; i++) {
+        // Extract R, G and B values
+        b_value = img_rgb8->data[i] & 0x03;
+        g_value = (img_rgb8->data[i] >> 2) & 0x07;
+        r_value = (img_rgb8->data[i] >> 5) & 0x07;
+
+        // Set Y-channel only
+        img_ascii->data[i] = y_to_ascii(rgb_to_yuv_y(r_value, g_value, b_value));
+    }
+
+    return 1;
+}
+
+
 uint8_t convert_GRAYSCALE_to_YUV444 (Image_t * img_grayscale, Image_t * img_yuv444)
 {
     uint32_t i = 0;
@@ -1832,6 +2032,29 @@ uint8_t convert_GRAYSCALE_to_RGB8 (Image_t * img_grayscale, Image_t * img_rgb8)
 }
 
 
+uint8_t convert_GRAYSCALE_to_ASCII (Image_t * img_grayscale, Image_t * img_ascii)
+{
+    uint32_t i = 0;
+    uint16_t width = 0;
+    uint16_t height = 0;
+
+    if (!img_grayscale) return 0;
+    if (img_grayscale->format != GRAYSCALE) return 0;
+    if (!img_ascii) return 0;
+    if (img_ascii->format != ASCII) return 0;
+    if (img_grayscale->width != img_ascii->width || img_grayscale->height != img_ascii->height) return 0;
+
+    width = img_grayscale->width;
+    height = img_grayscale->height;
+
+    for (i = 0; i < width * height; i++) {
+        img_ascii->data[i] = y_to_ascii(img_grayscale->data[i]);
+    }
+
+    return 1;
+}
+
+
 /* --------------------------------------------------------------------------------------------------------------------
  * COLOR TRANSFORMATION FUNCTIONS
  * --------------------------------------------------------------------------------------------------------------------
@@ -1939,4 +2162,39 @@ uint8_t rgb_to_yuv_v (uint8_t r, uint8_t g, uint8_t b)
     if (v < 0) return 0;
     if (v > 255) return 255;
     return (uint8_t) v;
+}
+
+
+uint8_t y_to_ascii (uint8_t y)
+{
+    y = rescale_color(y, 0, 255, 0, 11);
+
+    // Assuming y is in the range [0, 11]
+    switch (y) {
+        case 11:
+            return '@';
+        case 10:
+            return '#';
+        case 9:
+            return '%';
+        case 8:
+            return '$';
+        case 7:
+            return '=';
+        case 6:
+            return '/';
+        case 5:
+            return ':';
+        case 4:
+            return '+';
+        case 3:
+            return '-';
+        case 2:
+            return ',';
+        case 1:
+            return '.';
+        default:
+        case 0:
+            return ' ';
+    }
 }
