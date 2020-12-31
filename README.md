@@ -50,8 +50,14 @@ Libuimg currently supports the following image formats:
 | RGB565       | Packed           | 16 ([MSB] 5R 6G 5B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
 | RGB8         | Packed           | 8  ([MSB] 3R 3G 2B [LSB]) | R0G0B0 R1G1B1 R2G2B2 R3G3B3 |
 | GRAYSCALE    | Packed           | 8                         | Y0 Y1 Y2 Y3                 |
+| ASCII        | Packed           | 8                         | A0 A1 A2 A3                 |
 
-Libuimg currently supports conversions between any of the supported image formats.
+The ASCII format can be used for debugging; it transforms an image to ASCII characters with 12 different levels of
+brightness. This format can be very useful when working with images on embedded targets with no OS or display, where
+usually the only debugging interface is UART. The user can convert an image to ASCII and dump it via UART to quickly
+evaluate it (as opposed to dumping the raw data and then converting it to a PNG/JPEG image on the host machine).
+
+Libuimg currently supports conversions between any of the supported image formats, _except `ASCII_to_*`_.
 
 
 ---
