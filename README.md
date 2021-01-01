@@ -296,8 +296,16 @@ uint8_t result = convert_image(my_yuv444_image, converted_to_rgb24);
 if (!result) printf("Error during conversion\n");
 ```
 
-This is of course assuming that you have already allocated some space for the new image and that its `data` pointer is
-pointing to it.
+Flipping an image along the X or Y axis is simply a question of calling the appropriate function:
+
+```c
+// Assume we have an image called `my_img`, of any format
+
+// Flipping along X axis (top to bottom)
+uint8_t result_x = flipX_image(my_img);
+// Flipping along Y axis (left to right)
+uint8_t result_y = flipY_image(my_img);
+```
 
 ---
 
