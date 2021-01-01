@@ -57,7 +57,10 @@ brightness. This format can be very useful when working with images on embedded 
 usually the only debugging interface is UART. The user can convert an image to ASCII and dump it via UART to quickly
 evaluate it (as opposed to dumping the raw data and then converting it to a PNG/JPEG image on the host machine).
 
-Libuimg currently supports conversions between any of the supported image formats, _except `ASCII_to_*`_.
+Libuimg currently supports:
+
+- Conversions between any of the supported image formats, _except `ASCII_to_*`_
+- Flipping an image along the X or Y axis (for all the supported formats)
 
 
 ---
