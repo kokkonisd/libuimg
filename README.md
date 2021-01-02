@@ -406,6 +406,34 @@ they can be practical when interfacing with specific peripherals, for example di
 | Convert GRAYSCALE to RGB8    | 22.329 ms  |
 
 
+### Flips
+
+#### X-axis flips
+
+| Operation        | Time       |
+| ---------------- | ---------- |
+| YUV444 X flip    | 4.814 ms   |
+| YUV444p X flip   | 4.819 ms   |
+| YUV420p X flip   | 3.266 ms   |
+| RGB24 X flip     | 4.814 ms   |
+| RGB565 X flip    | 3.252 ms   |
+| RGB8 X flip      | 1.808 ms   |
+| GRAYSCALE X flip | 1.808 ms   |
+
+
+#### Y-axis flips
+
+| Operation        | Time       |
+| ---------------- | ---------- |
+| YUV444 Y flip    | 4.953 ms   |
+| YUV444p Y flip   | 4.857 ms   |
+| YUV420p Y flip   | 3.262 ms   |
+| RGB24 Y flip     | 4.953 ms   |
+| RGB565 Y flip    | 3.268 ms   |
+| RGB8 Y flip      | 1.814 ms   |
+| GRAYSCALE Y flip | 1.815 ms   |
+
+
 ---
 
 
