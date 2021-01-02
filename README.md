@@ -17,6 +17,7 @@ A fast, lightweight image manipulation library for embedded applications.
  - [How to use libuimg](#how-to-use-libuimg)
  - [Benchmarks](#benchmarks)
     - [Conversions](#conversions)
+    - [Flips](#flips)
  - [Developer notes](#developer-notes)
 
 
