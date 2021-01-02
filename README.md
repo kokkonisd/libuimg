@@ -431,5 +431,5 @@ Current TODO list:
 
 - ~Implement basic image struct~ DONE
 - ~Implement basic conversions~ DONE
-- Implement basic operations (scaling, rotating)
+- Implement basic operations (~flipping~, rotating, scaling)
 - Implement PNG/JPEG decoding
