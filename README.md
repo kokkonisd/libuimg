@@ -324,47 +324,47 @@ the firmware, not libuimg.
 
 | Operation                   | Time       |
 | --------------------------- | ---------- |
-| Convert YUV444 to YUV444p   | 7.927 ms   |
-| Convert YUV444 to YUV420p   | 7.229 ms   |
-| Convert YUV444 to RGB24     | 15.852 ms  |
-| Convert YUV444 to RGB565    | 20.414 ms  |
-| Convert YUV444 to RGB8      | 15.611 ms  |
-| Convert YUV444 to GRAYSCALE | 3.124 ms   |
+| Convert YUV444 to YUV444p   | 7.925 ms   |
+| Convert YUV444 to YUV420p   | 7.227 ms   |
+| Convert YUV444 to RGB24     | 15.849 ms  |
+| Convert YUV444 to RGB565    | 20.412 ms  |
+| Convert YUV444 to RGB8      | 15.609 ms  |
+| Convert YUV444 to GRAYSCALE | 3.123 ms   |
 
 
 #### YUV444p to * conversions
 
 | Operation                    | Time       |
 | ---------------------------- | ---------- |
-| Convert YUV444p to YUV444    | 7.446 ms   |
+| Convert YUV444p to YUV444    | 7.445 ms   |
 | Convert YUV444p to YUV420p   | 6.988 ms   |
-| Convert YUV444p to RGB24     | 17.773 ms  |
-| Convert YUV444p to RGB565    | 21.374 ms  |
-| Convert YUV444p to RGB8      | 18.973 ms  |
-| Convert YUV444p to GRAYSCALE | 1.444 ms   |
+| Convert YUV444p to RGB24     | 18.010 ms  |
+| Convert YUV444p to RGB565    | 21.371 ms  |
+| Convert YUV444p to RGB8      | 18.970 ms  |
+| Convert YUV444p to GRAYSCALE | 1.443 ms   |
 
 
 #### YUV420p to * conversions
 
 | Operation                    | Time       |
 | ---------------------------- | ---------- |
-| Convert YUV420p to YUV444    | 7.706 ms   |
-| Convert YUV420p to YUV444p   | 8.200 ms   |
-| Convert YUV420p to RGB24     | 13.729 ms  |
-| Convert YUV420p to RGB565    | 22.136 ms  |
-| Convert YUV420p to RGB8      | 19.491 ms  |
-| Convert YUV420p to GRAYSCALE | 1.444 ms   |
+| Convert YUV420p to YUV444    | 7.705 ms   |
+| Convert YUV420p to YUV444p   | 8.198 ms   |
+| Convert YUV420p to RGB24     | 13.965 ms  |
+| Convert YUV420p to RGB565    | 22.133 ms  |
+| Convert YUV420p to RGB8      | 19.488 ms  |
+| Convert YUV420p to GRAYSCALE | 1.443 ms   |
 
 
 #### RGB24 to * conversions
 
 | Operation                  | Time       |
 | -------------------------- | ---------- |
-| Convert RGB24 to YUV444    | 11.289 ms  |
-| Convert RGB24 to YUV444p   | 11.796 ms  |
-| Convert RGB24 to YUV420p   | 13.294 ms  |
-| Convert RGB24 to RGB565    | 21.854 ms  |
-| Convert RGB24 to RGB8      | 20.892 ms  |
+| Convert RGB24 to YUV444    | 11.287 ms  |
+| Convert RGB24 to YUV444p   | 11.768 ms  |
+| Convert RGB24 to YUV420p   | 13.248 ms  |
+| Convert RGB24 to RGB565    | 21.850 ms  |
+| Convert RGB24 to RGB8      | 20.889 ms  |
 | Convert RGB24 to GRAYSCALE | 5.525 ms   |
 
 
@@ -372,24 +372,24 @@ the firmware, not libuimg.
 
 | Operation                   | Time       |
 | --------------------------- | ---------- |
-| Convert RGB565 to YUV444    | 11.769 ms  |
-| Convert RGB565 to YUV444p   | 12.730 ms  |
-| Convert RGB565 to YUV420p   | 13.970 ms  |
-| Convert RGB565 to RGB24     | 6.486 ms   |
-| Convert RGB565 to RGB8      | 12.490 ms  |
-| Convert RGB565 to GRAYSCALE | 6.486 ms   |
+| Convert RGB565 to YUV444    | 11.767 ms  |
+| Convert RGB565 to YUV444p   | 12.728 ms  |
+| Convert RGB565 to YUV420p   | 13.968 ms  |
+| Convert RGB565 to RGB24     | 6.485 ms   |
+| Convert RGB565 to RGB8      | 12.488 ms  |
+| Convert RGB565 to GRAYSCALE | 6.484 ms   |
 
 
 #### RGB8 to * conversions
 
 | Operation                 | Time       |
 | ------------------------- | ---------- |
-| Convert RGB8 to YUV444    | 11.049 ms  |
-| Convert RGB8 to YUV444p   | 11.769 ms  |
-| Convert RGB8 to YUV420p   | 13.005 ms  |
-| Convert RGB8 to RGB24     | 5.526 ms   |
+| Convert RGB8 to YUV444    | 11.047 ms  |
+| Convert RGB8 to YUV444p   | 11.767 ms  |
+| Convert RGB8 to YUV420p   | 13.003 ms  |
+| Convert RGB8 to RGB24     | 5.524 ms   |
 | Convert RGB8 to RGB565    | 5.525 ms   |
-| Convert RGB8 to GRAYSCALE | 4.566 ms   |
+| Convert RGB8 to GRAYSCALE | 4.564 ms   |
 
 
 #### GRAYSCALE to * conversions
@@ -399,11 +399,11 @@ they can be practical when interfacing with specific peripherals, for example di
 | Operation                    | Time       |
 | ---------------------------- | ---------- |
 | Convert GRAYSCALE to YUV444  | 4.805 ms   |
-| Convert GRAYSCALE to YUV444p | 4.807 ms   |
-| Convert GRAYSCALE to YUV420p | 2.285 ms   |
-| Convert GRAYSCALE to RGB24   | 9.848 ms   |
-| Convert GRAYSCALE to RGB565  | 23.773 ms  |
-| Convert GRAYSCALE to RGB8    | 22.334 ms  |
+| Convert GRAYSCALE to YUV444p | 4.805 ms   |
+| Convert GRAYSCALE to YUV420p | 2.284 ms   |
+| Convert GRAYSCALE to RGB24   | 9.846 ms   |
+| Convert GRAYSCALE to RGB565  | 23.771 ms  |
+| Convert GRAYSCALE to RGB8    | 22.329 ms  |
 
 
 ---
