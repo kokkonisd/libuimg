@@ -104,7 +104,7 @@ TEST_TARGETS = $(patsubst %.o, %, $(TEST_OBJECTS))
 
 # Set optimization/debug flags based on the global DEBUG flag
 ifeq ($(DEBUG), 1)
-	CFLAGS += -g -O0
+	CFLAGS += -g -O0 -coverage
 else
 	CFLAGS += -O3
 endif
@@ -156,6 +156,14 @@ else
 		echo "" ; \
 	done
 endif
+
+
+# Run tests and get code coverage
+coverage: build tests
+ifeq ($(DEBUG), 0)
+	$(error Coverage not available in production mode, set DEBUG to 1)
+endif
+	gcov -o $(BUILD_DIR) $(SOURCES)
 
 
 # Install built libraries and header files
@@ -249,7 +257,7 @@ build:
 
 # Remove the build directory, cleaning up everything
 clean:
-	rm -rf $(BUILD_DIR)/
+	rm -rf $(BUILD_DIR)/ *.gcov
 
 
 # Keep test .o files
