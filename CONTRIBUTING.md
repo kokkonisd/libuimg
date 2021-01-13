@@ -69,6 +69,16 @@ need to add tests to cover it.
 
 Files should be prefixed by `libuimg_` for source files and `test_` for test files.
 
+In terms of targets, an STM32 MCU is considered a typical bare-metal ARM target, and a Raspberry Pi is considered a
+typical Linux ARM target.
+
+
+## Memory management
+
+Dynamic memory allocations **should not exist anywhere outside of `libuimg_img.c`.** If the user wishes to dynamically
+allocate memory, they should do it through the `create_image` function, and then pass the image pointer to the other
+functions of libuimg. The user should **always** be able to choose to work with static memory only.
+
 
 ## Code style
 
@@ -95,5 +105,21 @@ if (1 == 1) {
 
 As you noticed, in both examples there are spaces pretty much everywhere; don't do neither of `if(1==1)` or
 `if ( 1 == 1 )`. No need to over/under-do it.
+
+Function declarations always happen at the beginning of the function, and never in the body. Also, the variables are
+**always** initialized to something:
+
+```c
+void myfunc (void)
+{
+    uint8_t var1 = 0;
+    uint16_t var2 = 1;
+    int32_t var3 = -10;
+    char * c = NULL;
+}
+```
+
+Specific int sizes should be used; `int` should not exist in the source code, though you can use it in the tests
+because it doesn't matter. We are targeting embedded platforms and type sizes need to be specific.
 
 In general, try to imitate the style of the existing code.
