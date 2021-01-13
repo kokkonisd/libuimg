@@ -441,6 +441,9 @@ they can be practical when interfacing with specific peripherals, for example di
 
 ## Developer notes
 
+If you want to contribute, read the
+[contributing guide](https://github.com/kokkonisd/libuimg/blob/master/CONTRIBUTING.md) first.
+
 Testing is done via [cuts](https://github.com/sorjente/cuts). In order to run tests, simply run:
 
 ```text
