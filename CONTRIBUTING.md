@@ -106,7 +106,7 @@ if (1 == 1) {
 As you noticed, in both examples there are spaces pretty much everywhere; don't do neither of `if(1==1)` or
 `if ( 1 == 1 )`. No need to over/under-do it.
 
-Function declarations always happen at the beginning of the function, and never in the body. Also, the variables are
+Variable declarations always happen at the beginning of the function, and never in the body. Also, the variables are
 **always** initialized to something:
 
 ```c
