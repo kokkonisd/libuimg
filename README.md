@@ -1,6 +1,7 @@
 # libuimg
 
 ![CI](https://github.com/kokkonisd/libuimg/workflows/CI/badge.svg)
+![codecov](https://codecov.io/gh/kokkonisd/libuimg/branch/master/graph/badge.svg?token=I48WB1ZR1E)
 
 A fast, lightweight image manipulation library for embedded applications.
 
