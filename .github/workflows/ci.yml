@@ -18,11 +18,11 @@ jobs:
       - name: Install dependencies
         run: sudo apt-get update -y && sudo apt-get install valgrind
       - name: Make all
-        run: DEBUG=0 make
+        run: DEBUG=1 make
       - name: Run tests
-        run: DEBUG=0 make tests
+        run: DEBUG=1 make tests
       - name: Run memory checks
-        run: DEBUG=0 make memchecks
+        run: DEBUG=1 make memchecks
       - name: Run code coverage
         run: DEBUG=1 make clean coverage
       - uses: codecov/codecov-action@v1
@@ -36,7 +36,7 @@ jobs:
         with:
           submodules: 'recursive'
       - name: Make all
-        run: DEBUG=0 make
+        run: DEBUG=1 make
       - name: Run tests
-        run: DEBUG=0 make tests
+        run: DEBUG=1 make tests
 
