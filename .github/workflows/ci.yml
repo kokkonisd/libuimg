@@ -23,6 +23,9 @@ jobs:
         run: DEBUG=0 make tests
       - name: Run memory checks
         run: DEBUG=0 make memchecks
+      - name: Run code coverage
+        run: DEBUG=1 make clean coverage
+      - uses: codecov/codecov-action@v1
 
 
   macos_build:
