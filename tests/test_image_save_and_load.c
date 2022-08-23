@@ -299,6 +299,23 @@ char * test_load_from_file_incomplete_data ()
 }
 
 
+char * test_save_image_on_full_disk ()
+{
+    size_t res = 0;
+    Image_t * img = NULL;
+    FILE * image_file = NULL;
+
+    img = create_image(TEST_WIDTH, TEST_HEIGHT, RGB24);
+    // Attempt to save the image on /dev/full.
+    res = save_image(img, "/dev/full");
+    CUTS_ASSERT(res == 0, "Should not be able to save an image on /dev/full.");
+
+    destroy_image(img);
+
+    return NULL;
+}
+
+
 char * all_tests ()
 {
     CUTS_START();
@@ -313,6 +330,7 @@ char * all_tests ()
     CUTS_RUN_TEST(test_load_from_file_missing_format);
     CUTS_RUN_TEST(test_load_from_file_missing_data);
     CUTS_RUN_TEST(test_load_from_file_incomplete_data);
+    CUTS_RUN_TEST(test_save_image_on_full_disk);
 
     return NULL;
 }
