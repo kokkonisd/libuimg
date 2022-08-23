@@ -2,7 +2,7 @@
 #define __LIB_UIMG_FLIPS_H__
 
 
-#include "libuimg_img.h"
+#include "img.h"
 
 
 /**

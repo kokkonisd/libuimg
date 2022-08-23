@@ -45,6 +45,8 @@ CROSS_BM_CFLAGS ?=
 
 # Source code directory
 SOURCE_DIR = src
+# Header directory
+INCLUDE_DIR = inc
 # Build directory
 BUILD_DIR = build
 # Test directory
@@ -53,7 +55,7 @@ TEST_DIR = tests
 # Basic compiler flags
 CFLAGS = -Wall -Wextra
 # Include dirs (for building & testing)
-INCLUDES = -Isrc -I$(TEST_DIR)/cuts/src
+INCLUDES = -I$(INCLUDE_DIR) -I$(TEST_DIR)/cuts/src
 
 
 # Static & shared library definitions
@@ -84,7 +86,8 @@ LIBS_ARM = -lgcc -lc -lm
 
 
 # Header files (to be installed)
-HEADERS = $(wildcard $(SOURCE_DIR)/*.h)
+MAIN_HEADER = $(INCLUDE_DIR)/libuimg.h
+HEADERS_DIR = $(INCLUDE_DIR)/libuimg
 # Source files
 SOURCES = $(wildcard $(SOURCE_DIR)/*.c)
 # Source files for tests
@@ -170,11 +173,24 @@ endif
 install: build
 	@mkdir -p $(PREFIX)/lib/
 	@mkdir -p $(PREFIX)/include/
+	@mkdir -p $(PREFIX)/include/libuimg/
 #   Install headers
-	install $(HEADERS) $(PREFIX)/include/
+	install -t $(PREFIX)/include/ $(MAIN_HEADER)
+	install -t $(PREFIX)/include/libuimg $(wildcard $(HEADERS_DIR)/*.h)
 #   Install libraries
-	install $(shell ls -d $(BUILD_DIR)/lib/*) $(PREFIX)/lib/
+	install -t $(PREFIX)/lib/ $(shell ls -d $(BUILD_DIR)/lib/*)
+#   Run ldconfig to configure installed libraries (and make them usable)
+#   Note that we do not run `ldconfig -n $(PREFIX)/lib/` because the user might not want the install to go into the
+#   "global" cache (e.g. when installing in a local "test" directory to test out the library without polluting the
+#   system)
+	ldconfig
 
+
+# Uninstall libraries & headers (assuming a normal install)
+uninstall:
+	rm $(PREFIX)/lib/libuimg.*
+	rm $(PREFIX)/include/libuimg.h
+	rm -rf $(PREFIX)/include/libuimg/
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Low-level build rules
@@ -264,4 +280,4 @@ clean:
 .SECONDARY: $(TEST_OBJECTS)
 
 
-.PHONY: all macos linux arm arm-bm tests memchecks install clean
+.PHONY: all macos linux arm arm-bm tests memchecks install uninstall clean

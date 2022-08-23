@@ -5,7 +5,7 @@
 #include <string.h>
 
 
-#include "libuimg_img.h"
+#include "img.h"
 
 
 /**
