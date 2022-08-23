@@ -10,8 +10,8 @@ Here are some key high-level goals to keep in mind when developing libuimg:
 
 - **Embedded is king.** We optimize first and foremost for embedded targets. In fact the priority is: bare-metal ARM >
   Linux ARM > macOS/Linux x86.
-- **Master is always building.** The master branch should always _at least_ build and pass all tests and memory checks.
-  All of the development is done in the `dev` branch, which is merged into `master` once it is deemed stable.
+- **Main is always building.** The main branch should always _at least_ build and pass all tests and memory checks.
+  All of the development is done in the `dev` branch, which is merged into `main` once it is deemed stable.
 - **Coverage should be ~100%.** We aim for 100% coverage; of course there are exceptions (such as safeguards for corner
   cases that are not easily reproducible) but we should always take care to cover as much as we can through tests.
 - **Minimalism FTW.** Libuimg isn't meant to be some huge conglomeration of every image manipulation function known to
@@ -49,7 +49,7 @@ dependencies of this project in Windows either way).
 
 ## Sanity check
 
-Libuimg's `master` branch should work on your machine; if not, you have configured something incorrectly. Right after
+Libuimg's `main` branch should work on your machine; if not, you have configured something incorrectly. Right after
 forking the repo and _before_ modifying anything, run a simple sanity check: tests and memory checks should build fine.
 
 ```text
@@ -59,7 +59,7 @@ $ make clean all tests memchecks
 
 ## Development
 
-You should **always** develop on the `dev` branch. Any commits applied directly on `master` will simply not be
+You should **always** develop on the `dev` branch. Any commits applied directly on `main` will simply not be
 accepted. The correct workflow is: `PR you/libuimg:dev -> kokkonisd/libuimg:dev`.
 
 _Of course_, you should always run tests and memchecks before opening a PR; nothing breaking CI will pass a PR.

@@ -1,7 +1,7 @@
 # libuimg
 
 ![CI](https://github.com/kokkonisd/libuimg/workflows/CI/badge.svg)
-![codecov](https://codecov.io/gh/kokkonisd/libuimg/branch/master/graph/badge.svg?token=I48WB1ZR1E)
+![codecov](https://codecov.io/gh/kokkonisd/libuimg/branch/main/graph/badge.svg?token=I48WB1ZR1E)
 
 A fast, lightweight image manipulation library for embedded applications.
 
@@ -441,8 +441,7 @@ they can be practical when interfacing with specific peripherals, for example di
 
 ## Developer notes
 
-If you want to contribute, read the
-[contributing guide](https://github.com/kokkonisd/libuimg/blob/master/CONTRIBUTING.md) first.
+If you want to contribute, read the [contributing guide](CONTRIBUTING.md) first.
 
 Testing is done via [cuts](https://github.com/sorjente/cuts). In order to run tests, simply run:
 
