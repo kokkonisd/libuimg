@@ -82,5 +82,44 @@ Image_t * create_image (uint16_t width, uint16_t height, PixelFormat_t format);
  */
 void destroy_image (Image_t * img);
 
+/**
+ * @brief      Save an image to a (binary) file.
+ *
+ * The following elements are saved in the binary file, in order: width, height, pixel
+ * format, raw image data.
+ *
+ * @param[in]  img       The image to save.
+ * @param[in]  filepath  The path to the file where the image should be saved.
+ *
+ * @return     1 if successful, 0 otherwise.
+ */
+uint8_t save_image (Image_t * img, const char * filepath);
+
+/**
+ * @brief      Load an image from a (binary) file.
+ *
+ * An image will be created by this function, and it has to be freed later; if you wish
+ * to not use any dynamic allocations, use `load_static_image` instead.
+ *
+ * @param[in]  filepath  The path to the file where the image should be loaded from.
+ *
+ * @return     The loaded image structure if successful, NULL otherwise.
+ */
+Image_t * load_image (const char * filepath);
+
+/**
+ * @brief      Load an image from a (binary) file statically (without any allocations).
+ *
+ * The img parameter passed to this function should already be initialized correctly
+ * as no allocations will be performed; we expect the data buffer to be large enough to
+ * contain what is going to be loaded from the image file.
+ *
+ * @param[in]  img       The image structure to load to.
+ * @param[in]  filepath  The path to the file where the image should be loaded from.
+ *
+ * @return     1 if successful, 0 otherwise.
+ */
+uint8_t load_static_image (Image_t * img, const char * filepath);
+
 
 #endif
