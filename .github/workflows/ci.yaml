@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches: [ '*' ]
+  pull_request:
+    branches: [ '*' ]
+
+
+jobs:
+    build:
+        strategy:
+            matrix:
+                os-name: [ "ubuntu-latest", "macos-latest" ]
+
+
+        name: Libuimg build (${{ matrix.os-name }})
+        runs-on: ${{ matrix.os-name }}
+        steps:
+            - uses: actions/checkout@v2
+              with:
+                  submodules: 'recursive'
+            - name: Production build
+              run: make DEBUG=0
+            - name: Debug build
+              run: make clean all DEBUG=1
+            - name: Run tests
+              run: make tests DEBUG=1
+            - name: Run memory checks
+              if: ${{ matrix.os-name == 'ubuntu-latest' }}
+              run: sudo apt-get update -y && sudo apt-get install valgrind && make memchecks DEBUG=1
+            - name: Run code coverage
+              run: make clean coverage DEBUG=1
+            - name: Upload coverage report
+              if: ${{ matrix.os-name == 'ubuntu-latest' }}
+              uses: codecov/codecov-action@v3
+              with:
+                  verbose: true
