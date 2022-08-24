@@ -2,3 +2,5 @@ build/
 *.swp
 */**/*.swp
 *.gcov
+fuzz/in/
+fuzz/out/

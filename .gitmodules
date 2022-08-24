@@ -1,3 +1,6 @@
 [submodule "tests/cuts"]
 	path = tests/cuts
 	url = https://github.com/sorjente/cuts
+[submodule "fuzz/AFLplusplus"]
+	path = fuzz/AFLplusplus
+	url = https://github.com/AFLplusplus/AFLplusplus.git
