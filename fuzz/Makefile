@@ -44,7 +44,7 @@ OBJ_FILES = $(patsubst $(SOURCE_DIR)/%,$(BUILD_DIR)/%,$(patsubst %.c,%.o,$(SRC_F
 all: inputs fuzz
 
 # Run AFL++ on the entry point binary.
-fuzz: $(LIBUIMG) $(TARGET_BIN) $(AFL_TOOLS)
+fuzz: $(LIBUIMG) $(TARGET_BIN)
 	@rm -rf $(OUT_FUZZ_DIR)
 	@mkdir $(OUT_FUZZ_DIR)
 	$(FUZZ) -i $(IN_FUZZ_DIR)/ -o $(OUT_FUZZ_DIR)/ -- ./$(TARGET_BIN) @@
@@ -80,7 +80,7 @@ $(GENERATE_IMAGES_BIN): $(BUILD_DIR)/$(GENERATE_IMAGES).o $(LIBUIMG)
 $(TARGET_BIN): $(BUILD_DIR)/$(TARGET).o $(LIBUIMG)
 	$(FUZZ_CC) -o $@ $< -L../build/lib -Wl,-rpath=../build/lib/ -luimg
 
-$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c $(BUILD_DIR)
+$(BUILD_DIR)/%.o: $(SOURCE_DIR)/%.c $(BUILD_DIR) $(AFL_TOOLS)
 	$(FUZZ_CC) $(FUZZ_CFLAGS) -c $< -o $@ -I../inc/
 
 
