@@ -4,3 +4,4 @@
 [submodule "fuzz/AFLplusplus"]
 	path = fuzz/AFLplusplus
 	url = https://github.com/AFLplusplus/AFLplusplus.git
+    ignore = dirty
