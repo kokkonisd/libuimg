@@ -1,7 +1,7 @@
 #include "libuimg/img.h"
 
 
-static uint32_t get_image_data_size (uint16_t width, uint16_t height, PixelFormat_t format)
+uint32_t get_image_data_size (uint16_t width, uint16_t height, PixelFormat_t format)
 {
     uint32_t data_size = 0;
 
@@ -145,6 +145,10 @@ Image_t * load_image (const char * filepath)
         fclose(image_file);
         return NULL;
     }
+    if (!IS_VALID_PIXEL_FORMAT(format)) {
+        fclose(image_file);
+        return NULL;
+    }
 
     // Create the image structure.
     img = create_image(width, height, format);
@@ -193,6 +197,10 @@ uint8_t load_static_image (Image_t * img, const char * filepath)
 
     res = fread(&format, sizeof(PixelFormat_t), 1, image_file);
     if (res != 1) {
+        fclose(image_file);
+        return 0;
+    }
+    if (!IS_VALID_PIXEL_FORMAT(format)) {
         fclose(image_file);
         return 0;
     }

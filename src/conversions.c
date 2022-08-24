@@ -92,8 +92,15 @@ uint8_t convert_image (Image_t * base_img, Image_t * converted_img)
     if (!converted_img) return 0;
     // Verify that both images have the same dimensions
     if (base_img->width != converted_img->width || base_img->height != converted_img->height) return 0;
-    // Do nothing if the format does not change
-    if (base_img->format == converted_img->format) return 1;
+    // If the format does not change, simply copy the data
+    if (base_img->format == converted_img->format) {
+        memcpy(
+            converted_img->data,
+            base_img->data,
+            sizeof(uint8_t) * get_image_data_size(base_img->width, base_img->height, base_img->format)
+        );
+        return 1;
+    }
     // Conversions from ASCII are forbidden
     if (base_img->format == ASCII) return 0;
 

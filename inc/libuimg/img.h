@@ -17,6 +17,15 @@
  */
 #define UROUND_UP(x) (((uint32_t) (x)) < ((float) x) ? ((uint32_t) (x)) + 1 : ((uint32_t) (x)))
 
+/**
+ * @brief      Determine if a given pixel format is valid.
+ *
+ * @param      format  The pixel format to check.
+ *
+ * @return     1 if the format is valid, 0 otherwise.
+ */
+#define IS_VALID_PIXEL_FORMAT(format) ((format) >= YUV444 && (format) <= ASCII)
+
 
 /**
  * @brief Enumeration of the currently supported pixel formats.
@@ -120,6 +129,17 @@ Image_t * load_image (const char * filepath);
  * @return     1 if successful, 0 otherwise.
  */
 uint8_t load_static_image (Image_t * img, const char * filepath);
+
+/**
+ * @brief      Get the size (in bytes) of the raw pixel data required for an image.
+ *
+ * @param[in]  width   The width of the image.
+ * @param[in]  height  The height of the image.
+ * @param[in]  format  The pixel format of the image.
+ *
+ * @return     The size (in bytes) of the raw pixel data.
+ */
+uint32_t get_image_data_size (uint16_t width, uint16_t height, PixelFormat_t format);
 
 
 #endif
