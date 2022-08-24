@@ -65,8 +65,10 @@ Image_t * create_image (uint16_t width, uint16_t height, PixelFormat_t format)
 
 void destroy_image (Image_t * img)
 {
-    if (img->data) free(img->data);
-    if (img) free(img);
+    if (img) {
+        if (img->data) free(img->data);
+        free(img);
+    }
 }
 
 
