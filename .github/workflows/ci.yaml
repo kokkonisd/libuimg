@@ -17,9 +17,10 @@ jobs:
         name: Libuimg build (${{ matrix.os-name }})
         runs-on: ${{ matrix.os-name }}
         steps:
-            - uses: actions/checkout@v2
-              with:
-                  submodules: 'recursive'
+            - name: Checkout repo
+              uses: actions/checkout@v2
+            - name: Checkout CUTS submodule
+              run: git submodule update --init tests/cuts
             - name: Production build
               run: make DEBUG=0
             - name: Debug build
