@@ -1,4 +1,4 @@
-#include "libuimg/flips.h"
+#include "flips.h"
 
 
 /**

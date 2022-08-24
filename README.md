@@ -245,7 +245,7 @@ following linker flags:
 In order to get access to every element of `libuimg`'s API, all you need to do is include its main header file:
 
 ```c
-#include "libuimg.h"
+#include <libuimg/libuimg.h>
 ```
 
 The basic building block of the API is the `Image_t` structure. It contains the image's width and height (in `uint16_t`

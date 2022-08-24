@@ -86,8 +86,7 @@ LIBS_ARM = -lgcc -lc -lm
 
 
 # Header files (to be installed)
-MAIN_HEADER = $(INCLUDE_DIR)/libuimg.h
-HEADERS_DIR = $(INCLUDE_DIR)/libuimg
+HEADERS = $(wildcard $(INCLUDE_DIR)/*.h)
 # Source files
 SOURCES = $(wildcard $(SOURCE_DIR)/*.c)
 # Source files for tests
@@ -174,9 +173,8 @@ install: build
 	@mkdir -p $(PREFIX)/lib/
 	@mkdir -p $(PREFIX)/include/
 	@mkdir -p $(PREFIX)/include/libuimg/
-#   Install headers
-	install -t $(PREFIX)/include/ $(MAIN_HEADER)
-	install -t $(PREFIX)/include/libuimg $(wildcard $(HEADERS_DIR)/*.h)
+#   Install headers (with rw-rw-r-- permissions)
+	install -t $(PREFIX)/include/libuimg -m=664 $(HEADERS)
 #   Install libraries
 	install -t $(PREFIX)/lib/ $(shell ls -d $(BUILD_DIR)/lib/*)
 #   Run ldconfig to configure installed libraries (and make them usable)
