@@ -114,7 +114,13 @@ ifeq ($(DEBUG), 1)
 
 	# Optionally enable the address sanitizer
 	ifeq ($(ADDRSAN), 1)
-		CFLAGS += -fsanitize=address -static-libasan
+		CFLAGS += -fsanitize=address
+		# On macOS, the switch is `-static-libsan`, not `-static-libasan`
+		ifeq ($(shell uname -s), Darwin)
+			CFLAGS += -static-libsan
+		else
+			CFLAGS += -static-libasan
+		endif
 	endif
 else
 	CFLAGS += -O3
