@@ -1,4 +1,4 @@
-#include "img.h"
+#include <libuimg/img.h>
 
 
 uint32_t get_image_data_size (uint16_t width, uint16_t height, PixelFormat_t format)
