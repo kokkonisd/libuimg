@@ -6,6 +6,9 @@
 
 # Builds for production by default; set to 1 to enable debug flags and turn off optimization
 DEBUG ?= 0
+# Do not use address sanitizer by default; set to 1 to enable it. Note that DEBUG must be enabled in order for this to
+# have any effect.
+ADDRSAN ?= 0
 # Returns an exit code of 1 if anything goes wrong, set to 0 if you don't want failing tests tests/memory checks
 # crashing the make process
 ERROREXIT ?= 1
@@ -108,6 +111,11 @@ TEST_TARGETS = $(patsubst %.o, %, $(TEST_OBJECTS))
 # Set optimization/debug flags based on the global DEBUG flag
 ifeq ($(DEBUG), 1)
 	CFLAGS += -g -O0 -coverage
+
+	# Optionally enable the address sanitizer
+	ifeq ($(ADDRSAN), 1)
+		CFLAGS += -fsanitize=address -static-libasan
+	endif
 else
 	CFLAGS += -O3
 endif
