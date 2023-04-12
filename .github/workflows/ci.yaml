@@ -26,10 +26,10 @@ jobs:
             - name: Debug build
               run: make clean all DEBUG=1
             - name: Run tests
-              run: make tests DEBUG=1 ADDRSAN=1
+              run: make clean tests DEBUG=1 ADDRSAN=1
             - name: Run memory checks
               if: ${{ matrix.os-name == 'ubuntu-latest' }}
-              run: sudo apt-get update -y && sudo apt-get install valgrind && make memchecks DEBUG=1
+              run: sudo apt-get update -y && sudo apt-get install valgrind && make clean memchecks DEBUG=1
             - name: Run code coverage
               run: make clean coverage DEBUG=1
             - name: Upload coverage report
