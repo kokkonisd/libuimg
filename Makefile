@@ -4,11 +4,9 @@
 # Compiler & build customization
 # ---------------------------------------------------------------------------------------------------------------------
 
-# Builds for production by default; set to 1 to enable debug flags and turn off optimization
+# Builds for production by default; set to 1 to enable debug flags and turn off optimization, set to 2 to also enable
+# the address sanitizer
 DEBUG ?= 0
-# Do not use address sanitizer by default; set to 1 to enable it. Note that DEBUG must be enabled in order for this to
-# have any effect.
-ADDRSAN ?= 0
 # Returns an exit code of 1 if anything goes wrong, set to 0 if you don't want failing tests tests/memory checks
 # crashing the make process
 ERROREXIT ?= 1
@@ -55,8 +53,24 @@ BUILD_DIR = build
 # Test directory
 TEST_DIR = tests
 
-# Basic compiler flags
-CFLAGS = -Wall -Wextra
+# Categories of compiler flags (used later in CFLAGS)
+BASE_FLAGS = -Wall -Wextra
+DEBUG_FLAGS = -g -O0
+COVERAGE_FLAGS = -coverage
+SANITIZER_FLAGS = -fsanitize=address
+# On macOS, the switch is `-static-libsan`, not `-static-libasan`
+ifeq ($(shell uname -s), Darwin)
+	SANITIZER_FLAGS += -static-libsan
+else
+	SANITIZER_FLAGS += -static-libasan
+endif
+
+# Basic compiler flags (for the library itself)
+CFLAGS = $(BASE_FLAGS) -pedantic -std=c99
+# Compiler flags for the test files (for coverage)
+TEST_CFLAGS = $(BASE_FLAGS) $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(SANITIZER_FLAGS)
+# Compiler flags for the test files (for memcheck)
+MEMCHECK_FLAGS = $(BASE_FLAGS) $(DEBUG_FLAGS)
 # Include dirs (for building & testing)
 INCLUDES = -I$(INCLUDE_DIR) -I$(TEST_DIR)/cuts/src
 
@@ -109,22 +123,16 @@ TEST_TARGETS = $(patsubst %.o, %, $(TEST_OBJECTS))
 
 
 # Set optimization/debug flags based on the global DEBUG flag
-ifeq ($(DEBUG), 1)
-	CFLAGS += -g -O0 -coverage
-
-	# Optionally enable the address sanitizer
-	ifeq ($(ADDRSAN), 1)
-		CFLAGS += -fsanitize=address
-		# On macOS, the switch is `-static-libsan`, not `-static-libasan`
-		ifeq ($(shell uname -s), Darwin)
-			CFLAGS += -static-libsan
-		else
-			CFLAGS += -static-libasan
-		endif
-	endif
+ifeq ($(DEBUG), 0)
+	CFLAGS += $(OPTIMIZATION_FLAGS)
+else ifeq ($(DEBUG), 1)
+	CFLAGS += $(DEBUG_FLAGS)
+else ifeq ($(DEBUG), 2)
+	CFLAGS += $(DEBUG_FLAGS) $(COVERAGE_FLAGS) $(SANITIZER_FLAGS)
 else
-	CFLAGS += -O3
+$(error Invalid value '$(DEBUG)' for DEBUG, run `make help` for more info)
 endif
+
 
 
 # ---------------------------------------------------------------------------------------------------------------------
@@ -152,7 +160,9 @@ arm-bm: build $(TARGET_STATIC_ARM_BM)
 
 
 # Build & run tests (for the host only)
-tests: build $(TEST_TARGETS)
+tests:
+	@$(MAKE) --no-print-directory clean all DEBUG=2
+	@$(MAKE) --no-print-directory $(TEST_TARGETS) CFLAGS="$(TEST_CFLAGS)"
 	@for test in $(TEST_TARGETS) ; do \
 		./$$test || exit $(ERROREXIT); \
 		echo "" ; \
@@ -161,7 +171,9 @@ tests: build $(TEST_TARGETS)
 
 # Build & run memory checks (for the host only)
 # If host is running macOS, macgrind should be installed (see README.md)
-memchecks: build $(TEST_TARGETS)
+memchecks:
+	@$(MAKE) --no-print-directory clean all DEBUG=1
+	@$(MAKE) --no-print-directory $(TEST_TARGETS) CFLAGS="$(MEMCHECK_FLAGS)"
 ifeq ($(shell uname -s), Darwin)
 	@for test in $(TEST_TARGETS) ; do \
 		macgrind . $$test --custom-command "make tests" --run-before "make clean" || exit $(ERROREXIT); \
@@ -176,17 +188,14 @@ endif
 
 
 # Run tests and get code coverage
-coverage: build tests
-ifeq ($(DEBUG), 0)
-	$(error Coverage not available in production mode, set DEBUG to 1)
-endif
+coverage: tests
 	gcov -o $(BUILD_DIR) $(SOURCES)
 
 
 # Install built libraries and header files
 install: build
-	@mkdir -p $(PREFIX)/lib/
-	@mkdir -p $(PREFIX)/include/libuimg/
+	mkdir -p $(PREFIX)/lib/
+	mkdir -p $(PREFIX)/include/libuimg/
 #   Install headers (with rw-rw-r-- permissions)
 	install -t $(PREFIX)/include/ -m=664 $(MAIN_HEADER)
 	install -t $(PREFIX)/include/libuimg/ -m=664 $(HEADERS)
@@ -204,6 +213,47 @@ uninstall:
 	rm $(PREFIX)/lib/libuimg.*
 	rm $(PREFIX)/include/libuimg.h
 	rm -rf $(PREFIX)/include/libuimg/
+
+
+define HELP_SCREEN
+Libuimg Makefile help screen
+----------------------------
+
+Usage: make [target] [options]
+
+Targets
+-------
+  all:       build libuimg and produce the static library (.a). Accepts the 'DEBUG'
+             option (see below).
+  linux:     build libuimg and produce the shared Linux library (.so). Accepts the
+             'DEBUG' option (see below).
+  macos:     build libuimg and produce the shared macOS library (.dylib). Accepts the
+             'DEBUG' option (see below).
+  install:   install the currently built version of libuimg (on /usr/local/ by default).
+             Accepts the 'PREFIX' option (see below).
+  uninstall: uninstall any installed versions of libuimg (on /usr/local/ by default).
+             Accepts the 'PREFIX' option (see below).
+  tests:     build libuimg with DEBUG=2 (see options below) and run the testsuite.
+  coverage:  run the 'tests' target and collect coverage information.
+  memchecks: build libuimg with DEBUG=1 (see options below) and run the testsuite to
+             check for memory errors, using valgrind on Linux and macgrind on macOS.
+  clean:     remove build artifacts and coverage information.
+
+Options
+-------
+  DEBUG:  specify the debug level (0-2).
+  -> 0: no debug information (production build)
+  -> 1: basic debug information (no sanitizer or coverage)
+  -> 2: extra debug information (including sanitizer and coverage)
+  PREFIX: specify the prefix (path to the directory) for the installation (or the
+          removal of the installation).
+endef
+export HELP_SCREEN
+
+
+# Help screen (for the Makefile itself)
+help:
+	@echo "$$HELP_SCREEN"
 
 # ---------------------------------------------------------------------------------------------------------------------
 # Low-level build rules
