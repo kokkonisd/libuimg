@@ -57,12 +57,12 @@ TEST_DIR = tests
 BASE_FLAGS = -Wall -Wextra
 DEBUG_FLAGS = -g -O0
 COVERAGE_FLAGS = -coverage
-SANITIZER_FLAGS = -fsanitize=address,pointer-compare,pointer-subtract,leak,undefined
-# On macOS, the switch is `-static-libsan`, not `-static-libasan`
+SANITIZER_FLAGS = -fsanitize=address,pointer-compare,pointer-subtract,undefined
+# On macOS, the switch is `-static-libsan`, not `-static-libasan`, and the `leak` sanitizer is not supported
 ifeq ($(shell uname -s), Darwin)
 	SANITIZER_FLAGS += -static-libsan
 else
-	SANITIZER_FLAGS += -static-libasan
+	SANITIZER_FLAGS += -fsanitize=leak -static-libasan
 endif
 
 # Basic compiler flags (for the library itself)
