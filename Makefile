@@ -57,7 +57,7 @@ TEST_DIR = tests
 BASE_FLAGS = -Wall -Wextra
 DEBUG_FLAGS = -g -O0
 COVERAGE_FLAGS = -coverage
-SANITIZER_FLAGS = -fsanitize=address
+SANITIZER_FLAGS = -fsanitize=address,pointer-compare,pointer-subtract,leak,undefined
 # On macOS, the switch is `-static-libsan`, not `-static-libasan`
 ifeq ($(shell uname -s), Darwin)
 	SANITIZER_FLAGS += -static-libsan
